@@ -1,0 +1,17 @@
+{
+  "name": "baumkataster-openstreetmap-sync",
+  "version": "0.0.0",
+  "description": "Script to synchronize updates from Vienna Baumkataster into OpenStreetMap",
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/plepe/baumkataster-openstreetmap-sync.git"
+  },
+  "author": "Stephan Bösch-Plepelits <skunk@xover.mud.at>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/plepe/baumkataster-openstreetmap-sync/issues"
+  },
+  "homepage": "https://github.com/plepe/baumkataster-openstreetmap-sync#readme"
+}
