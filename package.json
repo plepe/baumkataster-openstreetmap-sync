@@ -2,6 +2,7 @@
   "name": "baumkataster-openstreetmap-sync",
   "version": "0.0.0",
   "description": "Script to synchronize updates from Vienna Baumkataster into OpenStreetMap",
+  "type": "module",
   "scripts": {
   },
   "repository": {
@@ -13,5 +14,8 @@
   "bugs": {
     "url": "https://github.com/plepe/baumkataster-openstreetmap-sync/issues"
   },
-  "homepage": "https://github.com/plepe/baumkataster-openstreetmap-sync#readme"
+  "homepage": "https://github.com/plepe/baumkataster-openstreetmap-sync#readme",
+  "dependencies": {
+    "node-fetch": "^3.2.10"
+  }
 }
