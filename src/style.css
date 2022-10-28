@@ -11,3 +11,6 @@
 #map-key > div {
   display: flex;
 }
+pre {
+  font-size: 8pt;
+}

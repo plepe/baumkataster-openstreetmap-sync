@@ -60,6 +60,7 @@ function init () {
   }
 }
 
+let currentLayer
 let currentOsm
 function show (data) {
   L.geoJSON(data, {
@@ -70,22 +71,46 @@ function show (data) {
       }
 
       return L.circleMarker(latlng, options)
+    },
+    onEachFeature: function (feature, layer) {
+      layer.on({
+        click: showTree
+      })
     }
-  }).bindPopup(function (layer) {
-    if (currentOsm) {
-      currentOsm.removeFrom(map)
-    }
+  }).addTo(map)
+}
 
-    const osmFeatures = {
-      type: 'FeatureCollection',
-      features: layer.feature.properties.osmTrees
-    }
+function showTree (e) {
+  const feature = e.target.feature
 
-    currentOsm = L.geoJSON(osmFeatures, {
-      pointToLayer: function (feature, latlng) {
-        return L.circleMarker(latlng, osmMarkerOptions)
+  if (currentLayer) {
+    currentLayer.setStyle({ fillOpacity: 0 })
+  }
+  if (currentOsm) {
+    currentOsm.removeFrom(map)
+  }
+
+  e.target.setStyle({ fillOpacity: 1 })
+  currentLayer = e.target
+
+  const osmFeatures = {
+    type: 'FeatureCollection',
+    features: feature.properties.osmTrees
+  }
+
+  currentOsm = L.geoJSON(osmFeatures, {
+    pointToLayer: function (feature, latlng) {
+      return L.circleMarker(latlng, osmMarkerOptions)
+    }
+  }).bindPopup (function (osmTree) {
+    const p = {}
+    for (let k in osmTree.feature.properties) {
+      if (!k.match(/^@/)) {
+        p[k] = osmTree.feature.properties[k]
       }
-    }).addTo(map)
-    return layer.feature.properties.assessment
+    }
+
+    return '<a target="_blank" href="https://openstreetmap.org/' + osmTree.feature.properties['@id'] + '">' + osmTree.feature.properties['@id'] + '</a><br>' +
+      '<pre>' + JSON.stringify(p, null, '  ') + '</pre>'
   }).addTo(map)
 }
