@@ -3,16 +3,14 @@ import OverpassFrontend from 'overpass-frontend'
 import async from 'async'
 const overpassFrontend = new OverpassFrontend('openstreetmap.json')
 
-const bbox = [ 48.16821, 16.31701, 48.17324, 16.32580 ]
-const searchDistance = 10
-const lastImportYear = 2012
+const config = JSON.parse(fs.readFileSync('conf.json'))
 
 let data = fs.readFileSync('baumkataster.json')
 data = JSON.parse(data)
 
 data = data.features.filter(function (tree) {
   const coord = tree.geometry.coordinates
-  return (coord[0] >= bbox[1] && coord[0] <= bbox[3] && coord[1] >= bbox[0] && coord[1] <= bbox[2])
+  return (coord[0] >= config.bbox[1] && coord[0] <= config.bbox[3] && coord[1] >= config.bbox[0] && coord[1] <= config.bbox[2])
 })
 
 let x = 0
@@ -20,7 +18,7 @@ let x = 0
 async.map(data, function (katTree, callback) {
   const osmTrees = []
   const coord = katTree.geometry.coordinates
-  const query = 'node[natural=tree](around:' + searchDistance + ',' + coord[1] + ',' + coord[0] + ')'
+  const query = 'node[natural=tree](around:' + config.searchDistance + ',' + coord[1] + ',' + coord[0] + ')'
   overpassFrontend.BBoxQuery(
     query,
     null,
@@ -84,7 +82,7 @@ function assessTree (katTree, osmTrees) {
 
   const osmTree = matchingTrees[0]
   if (osmTree.tags['start_date'] != katTree.properties.PFLANZJAHR) {
-    if (katTree.properties.PFLANZJAHR >= lastImportYear) {
+    if (katTree.properties.PFLANZJAHR >= config.lastImportYear) {
       return {
         text: 'tree found, replaced',
         trees: [osmTree]
