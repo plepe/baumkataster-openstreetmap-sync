@@ -16,6 +16,8 @@
   },
   "homepage": "https://github.com/plepe/baumkataster-openstreetmap-sync#readme",
   "dependencies": {
-    "node-fetch": "^3.2.10"
+    "async": "^3.2.4",
+    "node-fetch": "^3.2.10",
+    "overpass-frontend": "^3.0.1"
   }
 }
