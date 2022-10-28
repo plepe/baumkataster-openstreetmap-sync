@@ -37,7 +37,14 @@ const geojsonMarkerOptions = {
   opacity: 1,
   fillOpacity: 0.0
 }
+const osmMarkerOptions = {
+  radius: 4,
+  color: '#ff00ff',
+  weight: 0,
+  fillOpacity: 1.0
+}
 
+let currentOsm
 function show (data) {
   L.geoJSON(data, {
     pointToLayer: function (feature, latlng) {
@@ -49,6 +56,20 @@ function show (data) {
       return L.circleMarker(latlng, options)
     }
   }).bindPopup(function (layer) {
+    if (currentOsm) {
+      currentOsm.removeFrom(map)
+    }
+
+    const osmFeatures = {
+      type: 'FeatureCollection',
+      features: layer.feature.properties.osmTrees
+    }
+
+    currentOsm = L.geoJSON(osmFeatures, {
+      pointToLayer: function (feature, latlng) {
+        return L.circleMarker(latlng, osmMarkerOptions)
+      }
+    }).addTo(map)
     return layer.feature.properties.assessment
   }).addTo(map)
 }
