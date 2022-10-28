@@ -8,7 +8,8 @@
     "download-openstreetmap": "node download-openstreetmap.js",
     "download-all": "npm-run-all -p download-baumkataster download-openstreetmap",
     "assess": "node assess.js",
-    "lint": "standard --fix *.js src/*.js"
+    "lint": "standard --fix *.js src/*.js",
+    "start": "http-server ./ -p 8000"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,7 @@
     "standard": "^17.0.0"
   },
   "devDependencies": {
+    "http-server": "^14.1.1",
     "npm-run-all": "^4.1.5"
   }
 }
