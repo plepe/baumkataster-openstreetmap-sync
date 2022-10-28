@@ -4,6 +4,7 @@
   "description": "Script to synchronize updates from Vienna Baumkataster into OpenStreetMap",
   "type": "module",
   "scripts": {
+    "lint": "standard --fix *.js src/*.js"
   },
   "repository": {
     "type": "git",
@@ -18,6 +19,7 @@
   "dependencies": {
     "async": "^3.2.4",
     "node-fetch": "^3.2.10",
-    "overpass-frontend": "^3.0.1"
+    "overpass-frontend": "^3.0.1",
+    "standard": "^17.0.0"
   }
 }

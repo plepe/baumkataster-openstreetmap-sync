@@ -4,7 +4,10 @@ import fetch from 'node-fetch'
 fetch('https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:BAUMKATOGD&srsName=EPSG:4326&outputFormat=json')
   .then(req => req.text())
   .then(data => fs.writeFile('baumkataster.json', data,
-    (err) => if (err) { console.log(err) }))
+    (err) => {
+      if (err) { console.log(err) }
+    }
+  ))
 
 fetch('https://www.overpass-api.de/api/interpreter', {
   method: 'POST',
@@ -12,4 +15,7 @@ fetch('https://www.overpass-api.de/api/interpreter', {
 })
   .then(req => req.text())
   .then(data => fs.writeFile('openstreetmap.json', data,
-    (err) => if (err) { console.log(err) }))
+    (err) => {
+      if (err) { console.log(err) }
+    }
+  ))

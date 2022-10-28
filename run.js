@@ -22,9 +22,12 @@ async.map(data.features, function (katTree, callback) {
     null,
     {},
     function (err, osmTree) {
+      if (err) { return console.error(err) }
       osmTrees.push(osmTree)
     },
     function (err) {
+      if (err) { callback(err) }
+
       const result = assessTree(katTree, osmTrees)
 
       katTree.properties.assessment = result.text
@@ -35,6 +38,10 @@ async.map(data.features, function (katTree, callback) {
   )
 },
 (err, results) => {
+  if (err) {
+    return console.error(err)
+  }
+
   console.log(results.map(katTree => katTree.properties.assessment).join('\n'))
 
   const result = { type: 'FeatureCollection', features: results }
@@ -77,7 +84,7 @@ function assessTree (katTree, osmTrees) {
   }
 
   const osmTree = matchingTrees[0]
-  if (osmTree.tags.start_date != katTree.properties.PFLANZJAHR) {
+  if (parseInt(osmTree.tags.start_date) !== katTree.properties.PFLANZJAHR) {
     if (katTree.properties.PFLANZJAHR >= config.lastImportYear) {
       return {
         text: 'tree found, replaced',
@@ -85,7 +92,7 @@ function assessTree (katTree, osmTrees) {
       }
     }
 
-    if (katTree.properties.PFLANZJAHR == 0) {
+    if (katTree.properties.PFLANZJAHR === 0) {
       return {
         text: 'tree found, logged',
         trees: [osmTree]
