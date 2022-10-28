@@ -7,6 +7,7 @@
     "download-baumkataster": "node download-baumkataster.js",
     "download-openstreetmap": "node download-openstreetmap.js",
     "download-all": "npm-run-all -p download-baumkataster download-openstreetmap",
+    "assess": "node assess.js",
     "lint": "standard --fix *.js src/*.js"
   },
   "repository": {
