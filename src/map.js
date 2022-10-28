@@ -98,6 +98,13 @@ function showTree (e) {
     features: feature.properties.osmTrees
   }
 
+  const details = document.getElementById('details')
+  const p = JSON.parse(JSON.stringify(feature.properties))
+  delete p.assessment
+  delete p.osmTrees
+  details.innerHTML = feature.properties.assessment +
+    '<pre wrap>' + JSON.stringify(p, null, '  ') + '</pre>'
+
   currentOsm = L.geoJSON(osmFeatures, {
     pointToLayer: function (feature, latlng) {
       return L.circleMarker(latlng, osmMarkerOptions)
