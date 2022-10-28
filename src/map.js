@@ -6,7 +6,9 @@ window.onload = function () {
   map = L.map('map')
 
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxNativeZoom: 19,
+    maxZoom: 25
   }).addTo(map)
 
   fetch('conf.json')
