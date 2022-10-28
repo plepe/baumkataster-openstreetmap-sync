@@ -2,20 +2,6 @@
 let map
 let config
 
-const geojsonMarkerOptions = {
-  radius: 5,
-  color: '#000000',
-  weight: 2,
-  opacity: 1,
-  fillOpacity: 0.0
-}
-const osmMarkerOptions = {
-  radius: 4,
-  color: '#ff00ff',
-  weight: 0,
-  fillOpacity: 1.0
-}
-
 window.onload = function () {
   map = L.map('map')
 
@@ -50,7 +36,7 @@ function init () {
 
     const svg = document.createElement('span')
     svg.className = 'icon'
-    svg.innerHTML = '<svg width="25" height="25"><circle cx="13" cy="13" r="' + geojsonMarkerOptions.radius + '" style="stroke-width: ' + geojsonMarkerOptions.weight + 'px; stroke: ' + config.assessmentColors[text] + '; fill: none;"></svg>'
+    svg.innerHTML = '<svg width="25" height="25"><circle cx="13" cy="13" r="' + config.treeMarker.radius + '" style="stroke-width: ' + config.treeMarker.weight + 'px; stroke: ' + config.assessmentColors[text] + '; fill: none;"></svg>'
     div.appendChild(svg)
 
     const span = document.createElement('span')
@@ -65,7 +51,7 @@ let currentOsm
 function show (data) {
   L.geoJSON(data, {
     pointToLayer: function (feature, latlng) {
-      const options = JSON.parse(JSON.stringify(geojsonMarkerOptions))
+      const options = JSON.parse(JSON.stringify(config.treeMarker))
       if (feature.properties.assessment in config.assessmentColors) {
         options.color = config.assessmentColors[feature.properties.assessment]
       }
@@ -107,7 +93,7 @@ function showTree (e) {
 
   currentOsm = L.geoJSON(osmFeatures, {
     pointToLayer: function (feature, latlng) {
-      return L.circleMarker(latlng, osmMarkerOptions)
+      return L.circleMarker(latlng, config.osmMarker)
     }
   }).bindPopup (function (osmTree) {
     const p = {}

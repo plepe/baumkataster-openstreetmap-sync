@@ -11,5 +11,18 @@
     "no matching trees found": "#af00ff",
     "several trees with same BAUMNUMMER found": "#ff00ff",
     "tree found, but different start_date": "#ff0000"
+  },
+  "treeMarker": {
+    "radius": 5,
+    "color": "#000000",
+    "weight": 2,
+    "opacity": 1,
+    "fillOpacity": 0.0
+  },
+  "osmMarker": {
+    "radius": 4,
+    "color": "#ff00ff",
+    "weight": 0,
+    "fillOpacity": 1.0
   }
 }
