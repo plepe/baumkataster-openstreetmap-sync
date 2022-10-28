@@ -1,9 +1,12 @@
 import fs from 'fs'
 import fetch from 'node-fetch'
 
+const config = JSON.parse(fs.readFileSync('conf.json'))
+const bbox = config.bbox.map((c, i) => c + config.bboxBuffer * (i > 1 ? 1 : -1)).join(',')
+
 fetch('https://www.overpass-api.de/api/interpreter', {
   method: 'POST',
-  body: '[out:json][bbox:48.16821,16.31701,48.17324,16.32580];node[natural=tree];out meta;'
+  body: '[out:json][bbox:' + bbox + '];node[natural=tree];out meta;'
 })
   .then(req => req.text())
   .then(data => fs.writeFile('openstreetmap.json', data,
