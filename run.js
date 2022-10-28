@@ -8,14 +8,12 @@ const config = JSON.parse(fs.readFileSync('conf.json'))
 let data = fs.readFileSync('baumkataster.json')
 data = JSON.parse(data)
 
-data = data.features.filter(function (tree) {
+data.features = data.features.filter(function (tree) {
   const coord = tree.geometry.coordinates
   return (coord[0] >= config.bbox[1] && coord[0] <= config.bbox[3] && coord[1] >= config.bbox[0] && coord[1] <= config.bbox[2])
 })
 
-let x = 0
-
-async.map(data, function (katTree, callback) {
+async.map(data.features, function (katTree, callback) {
   const osmTrees = []
   const coord = katTree.geometry.coordinates
   const query = 'node[natural=tree](around:' + config.searchDistance + ',' + coord[1] + ',' + coord[0] + ')'
@@ -43,7 +41,6 @@ async.map(data, function (katTree, callback) {
   fs.writeFile('result.geojson', JSON.stringify(result, null, '  '), () => {})
 })
 
-
 function assessTree (katTree, osmTrees) {
   const matchingTrees = osmTrees.filter(osmTree => {
     return osmTree.tags['tree:ref'] === katTree.properties.BAUMNUMMER
@@ -66,8 +63,7 @@ function assessTree (katTree, osmTrees) {
         text: 'non-matching trees found',
         trees: matchingTreesWithoutNR
       }
-    }
-    else if (matchingTreesWithoutNR.length === 1) {
+    } else if (matchingTreesWithoutNR.length === 1) {
       return {
         text: 'non-matching tree found',
         trees: matchingTreesWithoutNR
@@ -81,7 +77,7 @@ function assessTree (katTree, osmTrees) {
   }
 
   const osmTree = matchingTrees[0]
-  if (osmTree.tags['start_date'] != katTree.properties.PFLANZJAHR) {
+  if (osmTree.tags.start_date != katTree.properties.PFLANZJAHR) {
     if (katTree.properties.PFLANZJAHR >= config.lastImportYear) {
       return {
         text: 'tree found, replaced',
