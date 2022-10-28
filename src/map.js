@@ -32,7 +32,7 @@ function init () {
 
 const geojsonMarkerOptions = {
   radius: 5,
-  color: '#ff7800',
+  color: '#000000',
   weight: 2,
   opacity: 1,
   fillOpacity: 0.0
@@ -41,7 +41,12 @@ const geojsonMarkerOptions = {
 function show (data) {
   L.geoJSON(data, {
     pointToLayer: function (feature, latlng) {
-      return L.circleMarker(latlng, geojsonMarkerOptions)
+      const options = JSON.parse(JSON.stringify(geojsonMarkerOptions))
+      if (feature.properties.assessment in config.assessmentColors) {
+        options.color = config.assessmentColors[feature.properties.assessment]
+      }
+
+      return L.circleMarker(latlng, options)
     }
   }).bindPopup(function (layer) {
     return layer.feature.properties.assessment

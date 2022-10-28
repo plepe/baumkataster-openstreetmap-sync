@@ -1,5 +1,15 @@
 {
   "bbox": [ 48.16821, 16.31701, 48.17324, 16.32580 ],
   "searchDistance": 10,
-  "lastImportYear": 2012
+  "lastImportYear": 2012,
+  "assessmentColors": {
+    "tree found": "#00af00",
+    "tree found, replaced": "#007f00",
+    "tree found, logged": "#007faf",
+    "non-matching trees found": "#0000ff",
+    "non-matching tree found": "#007fff",
+    "no matching trees found": "#af00ff",
+    "several trees with same BAUMNUMMER found": "#ff00ff",
+    "tree found, but different start_date": "#ff0000"
+  }
 }
