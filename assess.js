@@ -1,57 +1,88 @@
 import fs from 'fs'
 import OverpassFrontend from 'overpass-frontend'
 import async from 'async'
-console.error('loading OSM data')
-const overpassFrontend = new OverpassFrontend('openstreetmap.json')
-overpassFrontend.once('load', () => {
-  console.error('finished loading OSM data')
-})
 
 const config = JSON.parse(fs.readFileSync('conf.json'))
 
-console.error('loading baumkataster')
-let data = fs.readFileSync('baumkataster.json')
-data = JSON.parse(data)
-console.error('finished loading baumkataster')
+let overpassFrontend
+let data
 
-data.features = data.features.filter(function (tree) {
-  const coord = tree.geometry.coordinates
-  return (coord[0] >= config.bbox[1] && coord[0] <= config.bbox[3] && coord[1] >= config.bbox[0] && coord[1] <= config.bbox[2])
-})
+function loadOSM (callback) {
+  console.error('loading OSM data')
+  overpassFrontend = new OverpassFrontend('openstreetmap.json')
+  overpassFrontend.once('load', () => {
+    console.error('finished loading OSM data')
+    callback()
+  })
+}
 
-async.mapLimit(data.features, config.assessParallel || 1, function (katTree, callback) {
-  const osmTrees = []
-  const coord = katTree.geometry.coordinates
-  const query = 'node[natural=tree](around:' + config.searchDistance + ',' + coord[1] + ',' + coord[0] + ')'
-  overpassFrontend.BBoxQuery(
-    query,
-    null,
-    {},
-    function (err, osmTree) {
-      if (err) { return console.error(err) }
-      osmTrees.push(osmTree)
-    },
-    function (err) {
-      if (err) { callback(err) }
-
-      const result = assessTree(katTree, osmTrees)
-
-      katTree.properties.assessment = result.text
-      katTree.properties.osmTrees = result.trees.map(t => t.GeoJSON())
-      console.log(katTree.properties.OBJECTID + ': ' + result.text)
-
-      callback(null, katTree)
+function loadBK (callback) {
+  console.error('loading baumkataster')
+  fs.readFile('baumkataster.json', (err, _data) => {
+    if (err) {
+      console.error('error loading baumkataster', err)
+      return callback(err)
     }
-  )
-},
-(err, results) => {
-  if (err) {
-    return console.error(err)
-  }
 
-  const result = { type: 'FeatureCollection', features: results }
-  fs.writeFile('result.geojson', JSON.stringify(result, null, '  '), () => {})
+    data = JSON.parse(_data)
+    console.error('finished loading baumkataster')
+    callback(null)
+  })
+}
+
+async.parallel([
+  loadOSM,
+  loadBK
+], (err) => {
+  if (err) { return }
+
+  console.log('here')
+  filterBBox()
+  assess()
 })
+
+function filterBBox () {
+  data.features = data.features.filter(function (tree) {
+    const coord = tree.geometry.coordinates
+    return (coord[0] >= config.bbox[1] && coord[0] <= config.bbox[3] && coord[1] >= config.bbox[0] && coord[1] <= config.bbox[2])
+  })
+}
+
+function assess () {
+  async.mapLimit(data.features, config.assessParallel || 1, function (katTree, callback) {
+    const osmTrees = []
+    const coord = katTree.geometry.coordinates
+    const query = 'node[natural=tree](around:' + config.searchDistance + ',' + coord[1] + ',' + coord[0] + ')'
+    overpassFrontend.BBoxQuery(
+      query,
+      null,
+      {},
+      function (err, osmTree) {
+        if (err) { return console.error(err) }
+        osmTrees.push(osmTree)
+      },
+      function (err) {
+        if (err) { callback(err) }
+
+        const result = assessTree(katTree, osmTrees)
+
+        katTree.properties.assessment = result.text
+        katTree.properties.osmTrees = result.trees.map(t => t.GeoJSON())
+        console.log(katTree.properties.OBJECTID + ': ' + result.text)
+
+        callback(null, katTree)
+      }
+    )
+  },
+  (err, results) => {
+    if (err) {
+      return console.error(err)
+    }
+
+    const result = { type: 'FeatureCollection', features: results }
+    fs.writeFile('result.geojson', JSON.stringify(result, null, '  '), () => {})
+  })
+}
 
 function assessTree (katTree, osmTrees) {
   const matchingTrees = osmTrees.filter(osmTree => {
