@@ -1,12 +1,18 @@
 import fs from 'fs'
 import OverpassFrontend from 'overpass-frontend'
 import async from 'async'
+console.error('loading OSM data')
 const overpassFrontend = new OverpassFrontend('openstreetmap.json')
+overpassFrontend.once('load', () => {
+  console.error('finished loading OSM data')
+})
 
 const config = JSON.parse(fs.readFileSync('conf.json'))
 
+console.error('loading baumkataster')
 let data = fs.readFileSync('baumkataster.json')
 data = JSON.parse(data)
+console.error('finished loading baumkataster')
 
 data.features = data.features.filter(function (tree) {
   const coord = tree.geometry.coordinates
@@ -32,6 +38,7 @@ async.mapLimit(data.features, config.assessParallel || 1, function (katTree, cal
 
       katTree.properties.assessment = result.text
       katTree.properties.osmTrees = result.trees.map(t => t.GeoJSON())
+      console.log(katTree.properties.OBJECTID + ': ' + result.text)
 
       callback(null, katTree)
     }
@@ -41,8 +48,6 @@ async.mapLimit(data.features, config.assessParallel || 1, function (katTree, cal
   if (err) {
     return console.error(err)
   }
-
-  console.log(results.map(katTree => katTree.properties.assessment).join('\n'))
 
   const result = { type: 'FeatureCollection', features: results }
   fs.writeFile('result.geojson', JSON.stringify(result, null, '  '), () => {})
