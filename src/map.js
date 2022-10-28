@@ -2,6 +2,20 @@
 let map
 let config
 
+const geojsonMarkerOptions = {
+  radius: 5,
+  color: '#000000',
+  weight: 2,
+  opacity: 1,
+  fillOpacity: 0.0
+}
+const osmMarkerOptions = {
+  radius: 4,
+  color: '#ff00ff',
+  weight: 0,
+  fillOpacity: 1.0
+}
+
 window.onload = function () {
   map = L.map('map')
 
@@ -28,20 +42,22 @@ function init () {
     [config.bbox[0], config.bbox[1]],
     [config.bbox[2], config.bbox[3]]
   ])
-}
 
-const geojsonMarkerOptions = {
-  radius: 5,
-  color: '#000000',
-  weight: 2,
-  opacity: 1,
-  fillOpacity: 0.0
-}
-const osmMarkerOptions = {
-  radius: 4,
-  color: '#ff00ff',
-  weight: 0,
-  fillOpacity: 1.0
+  const mapKey = document.getElementById('map-key')
+  for (const text in config.assessmentColors) {
+    const div = document.createElement('div')
+    mapKey.appendChild(div)
+
+    const svg = document.createElement('span')
+    svg.className = 'icon'
+    svg.innerHTML = '<svg width="25" height="25"><circle cx="13" cy="13" r="' + geojsonMarkerOptions.radius + '" style="stroke-width: ' + geojsonMarkerOptions.weight + 'px; stroke: ' + config.assessmentColors[text] + '; fill: none;"></svg>'
+    div.appendChild(svg)
+
+    const span = document.createElement('span')
+    span.className = 'text'
+    span.appendChild(document.createTextNode(text))
+    div.appendChild(span)
+  }
 }
 
 let currentOsm
