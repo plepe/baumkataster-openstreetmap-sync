@@ -13,7 +13,7 @@ data.features = data.features.filter(function (tree) {
   return (coord[0] >= config.bbox[1] && coord[0] <= config.bbox[3] && coord[1] >= config.bbox[0] && coord[1] <= config.bbox[2])
 })
 
-async.map(data.features, function (katTree, callback) {
+async.mapLimit(data.features, config.assessParallel || 1, function (katTree, callback) {
   const osmTrees = []
   const coord = katTree.geometry.coordinates
   const query = 'node[natural=tree](around:' + config.searchDistance + ',' + coord[1] + ',' + coord[0] + ')'
