@@ -9,7 +9,7 @@ fetch('https://www.overpass-api.de/api/interpreter', {
   body: '[out:json][bbox:' + bbox + '];node[natural=tree];out meta;'
 })
   .then(req => req.text())
-  .then(data => fs.writeFile('openstreetmap.json', data,
+  .then(data => fs.writeFile('data/openstreetmap.json', data,
     (err) => {
       if (err) { return console.log(err) }
       console.log('Finished downloading OSM data')

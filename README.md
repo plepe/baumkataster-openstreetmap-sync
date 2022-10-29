@@ -9,6 +9,7 @@ git clone https://github.com/plepe/baumkataster-openstreetmap-sync
 cd baumkataster-openstreetmap-sync
 # You might want to edit conf.json to modify bounding box
 npm install # Install dependencies
+mkdir data # Create directory for the data
 npm run download-all # Download Baumkataster and OpenStreetMap data
 npm run assess # Assess all baumkataster trees in bounding box
 npm start # Start the web server to show baumkataster trees

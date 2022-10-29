@@ -18,7 +18,7 @@ window.onload = function () {
       init()
     })
 
-  fetch('result.geojson')
+  fetch('data/result.geojson')
     .then(req => req.json())
     .then(body => show(body))
 }

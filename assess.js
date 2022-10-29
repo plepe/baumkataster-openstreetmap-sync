@@ -9,7 +9,7 @@ let data
 
 function loadOSM (callback) {
   console.error('loading OSM data')
-  overpassFrontend = new OverpassFrontend('openstreetmap.json')
+  overpassFrontend = new OverpassFrontend('data/openstreetmap.json')
   overpassFrontend.once('load', () => {
     console.error('finished loading OSM data')
     callback()
@@ -18,7 +18,7 @@ function loadOSM (callback) {
 
 function loadBK (callback) {
   console.error('loading baumkataster')
-  fs.readFile('baumkataster.json', (err, _data) => {
+  fs.readFile('data/baumkataster.geojson', (err, _data) => {
     if (err) {
       console.error('error loading baumkataster', err)
       return callback(err)
@@ -80,7 +80,7 @@ function assess () {
     }
 
     const result = { type: 'FeatureCollection', features: results }
-    fs.writeFile('result.geojson', JSON.stringify(result, null, '  '), () => {})
+    fs.writeFile('data/result.geojson', JSON.stringify(result, null, '  '), () => {})
   })
 }
 
