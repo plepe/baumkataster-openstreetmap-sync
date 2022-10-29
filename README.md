@@ -8,8 +8,8 @@ You need [NodeJS](https://nodejs.org) installed.
 git clone https://github.com/plepe/baumkataster-openstreetmap-sync
 cd baumkataster-openstreetmap-sync
 # You might want to edit conf.json to modify bounding box
+mkdir data dist # Create directory for the data
 npm install # Install dependencies
-mkdir data # Create directory for the data
 npm run download-all # Download Baumkataster and OpenStreetMap data
 npm run assess # Assess all baumkataster trees in bounding box
 npm start # Start the web server to show baumkataster trees
@@ -22,3 +22,6 @@ To asssess trees in a different area, change the bounding box in conf.json, then
 npm run download-openstreetmap
 npm run assess
 ```
+
+## DEVELOPMENT
+To rebuild the website's source code, run either `npm run build` or `npm run watch` (including debug symbols).
