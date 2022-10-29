@@ -103,18 +103,18 @@ function assessTree (katTree, osmTrees) {
 
     if (matchingTreesWithoutNR.length > 1) {
       return {
-        text: 'non-matching trees found',
+        text: 'trees without NUMMER found',
         trees: matchingTreesWithoutNR
       }
     } else if (matchingTreesWithoutNR.length === 1) {
       return {
-        text: 'non-matching tree found',
+        text: 'tree without NUMMER found',
         trees: matchingTreesWithoutNR
       }
     }
 
     return {
-      text: 'no matching trees found',
+      text: 'no trees found',
       trees: []
     }
   }

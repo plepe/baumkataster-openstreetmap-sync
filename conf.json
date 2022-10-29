@@ -8,9 +8,9 @@
     "tree found": "#00af00",
     "tree found, replaced": "#007f00",
     "tree found, logged": "#007faf",
-    "non-matching trees found": "#0000ff",
-    "non-matching tree found": "#007fff",
-    "no matching trees found": "#af00ff",
+    "trees without NUMMER found": "#0000ff",
+    "tree without NUMMER found": "#007fff",
+    "no trees found": "#af00ff",
     "several trees with same BAUMNUMMER found": "#ff00ff",
     "tree found, but different start_date": "#ff0000"
   },
