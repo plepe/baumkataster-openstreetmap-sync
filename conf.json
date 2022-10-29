@@ -4,16 +4,6 @@
   "searchDistance": 10,
   "assessParallel": 4,
   "lastImportYear": 2012,
-  "assessmentColors": {
-    "tree found": "#00af00",
-    "tree found, replaced": "#007f00",
-    "tree found, logged": "#007faf",
-    "trees without NUMMER found": "#0000ff",
-    "trees with different NUMMER found": "#af7fff",
-    "no trees found": "#af00ff",
-    "several trees with same BAUMNUMMER found": "#ff00ff",
-    "tree found, but different start_date": "#ff0000"
-  },
   "treeMarker": {
     "radius": 5,
     "color": "#000000",

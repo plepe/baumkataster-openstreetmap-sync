@@ -3,6 +3,7 @@ import async from 'async'
 let map
 let config
 let data
+let assessments
 
 window.onload = function () {
   map = L.map('map')
@@ -19,6 +20,13 @@ window.onload = function () {
         .then(req => req.json())
         .then(body => {
           config = body
+          done()
+        }),
+    (done) =>
+      fetch('assessments.json')
+        .then(req => req.json())
+        .then(body => {
+          assessments = body
           done()
         }),
     (done) =>
@@ -45,13 +53,13 @@ function init () {
   ])
 
   const mapKey = document.getElementById('map-key')
-  for (const text in config.assessmentColors) {
+  for (const text in assessments) {
     const div = document.createElement('div')
     mapKey.appendChild(div)
 
     const svg = document.createElement('span')
     svg.className = 'icon'
-    svg.innerHTML = '<svg width="25" height="25"><circle cx="13" cy="13" r="' + config.treeMarker.radius + '" style="stroke-width: ' + config.treeMarker.weight + 'px; stroke: ' + config.assessmentColors[text] + '; fill: none;"></svg>'
+    svg.innerHTML = '<svg width="25" height="25"><circle cx="13" cy="13" r="' + config.treeMarker.radius + '" style="stroke-width: ' + config.treeMarker.weight + 'px; stroke: ' + assessments[text] + '; fill: none;"></svg>'
     div.appendChild(svg)
 
     const span = document.createElement('span')
@@ -67,8 +75,8 @@ function show () {
   L.geoJSON(data, {
     pointToLayer: function (feature, latlng) {
       const options = JSON.parse(JSON.stringify(config.treeMarker))
-      if (feature.properties.assessment in config.assessmentColors) {
-        options.color = config.assessmentColors[feature.properties.assessment]
+      if (feature.properties.assessment in assessments) {
+        options.color = assessments[feature.properties.assessment]
       }
 
       return L.circleMarker(latlng, options)
