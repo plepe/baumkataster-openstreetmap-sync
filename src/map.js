@@ -111,8 +111,14 @@ function showTree (e) {
   const p = JSON.parse(JSON.stringify(feature.properties))
   delete p.assessment
   delete p.osmTrees
-  details.innerHTML = feature.properties.assessment +
-    '<pre wrap>' + JSON.stringify(p, null, '  ') + '</pre>'
+
+  details.innerHTML = ''
+  details.appendChild(document.createTextNode(feature.properties.assessment))
+
+  const pre = document.createElement('pre')
+  pre.appendChild(document.createTextNode(JSON.stringify(p, null, '  ')))
+  pre.setAttribute('wrap', true)
+  details.appendChild(pre)
 
   currentOsm = L.geoJSON(osmFeatures, {
     pointToLayer: function (feature, latlng) {
