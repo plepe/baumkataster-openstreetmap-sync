@@ -107,7 +107,7 @@ function showTree (e) {
     currentLayer.setStyle({ fillOpacity: 0 })
   }
   if (currentOsm) {
-    currentOsm.removeFrom(map)
+    currentOsm.forEach(l => l.removeFrom(map))
   }
 
   e.target.setStyle({ fillOpacity: 1 })
