@@ -1,5 +1,6 @@
 /* global L:false */
 import async from 'async'
+import distance from '@turf/distance'
 let map
 let config
 let data
@@ -119,6 +120,22 @@ function showTree (e) {
   pre.appendChild(document.createTextNode(JSON.stringify(p, null, '  ')))
   pre.setAttribute('wrap', true)
   details.appendChild(pre)
+
+  details.appendChild(document.createTextNode('Possible matches'))
+
+  const ul = document.createElement('ul')
+  osmFeatures.features.forEach(f => {
+    const li = document.createElement('li')
+    const a = document.createElement('a')
+    a.href = 'https://openstreetmap.org/' + f.properties['@id']
+    a.target = '_blank'
+    a.appendChild(document.createTextNode(f.properties['@id']))
+    li.appendChild(a)
+
+    li.appendChild(document.createTextNode(' (' + (distance(feature, f, { unit: 'kilometers' }) * 1000).toFixed(0) + 'm)'))
+    ul.appendChild(li)
+  })
+  details.appendChild(ul)
 
   currentOsm = L.geoJSON(osmFeatures, {
     pointToLayer: function (feature, latlng) {
