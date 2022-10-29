@@ -29,7 +29,6 @@ window.onload = function () {
         .then(req => req.json())
         .then(body => {
           assessments = body
-          initMapKey()
           done()
         }),
     (done) =>
@@ -44,6 +43,7 @@ window.onload = function () {
       global.alert(err)
     }
 
+    initMapKey()
     show()
   })
 }
