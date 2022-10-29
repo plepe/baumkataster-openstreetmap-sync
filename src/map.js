@@ -151,7 +151,7 @@ function showTree (e) {
   })
   details.appendChild(ul)
 
-  osmFeatures.features.forEach(
+  currentOsm = osmFeatures.features.map(
     feature => {
       const layer = L.circleMarker([ feature.geometry.coordinates[1], feature.geometry.coordinates[0] ], config.osmMarker)
       layer.bindPopup(function () {
@@ -168,6 +168,7 @@ function showTree (e) {
       })
       layer.addTo(map)
       feature.layer = layer
+      return layer
     }
   )
 }

@@ -37,7 +37,6 @@ async.parallel([
 ], (err) => {
   if (err) { return }
 
-  console.log('here')
   filterBBox()
   assess()
 })
