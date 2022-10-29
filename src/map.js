@@ -118,9 +118,9 @@ function showTree (e) {
     pointToLayer: function (feature, latlng) {
       return L.circleMarker(latlng, config.osmMarker)
     }
-  }).bindPopup (function (osmTree) {
+  }).bindPopup(function (osmTree) {
     const p = {}
-    for (let k in osmTree.feature.properties) {
+    for (const k in osmTree.feature.properties) {
       if (!k.match(/^@/)) {
         p[k] = osmTree.feature.properties[k]
       }
