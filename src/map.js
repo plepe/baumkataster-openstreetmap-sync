@@ -119,7 +119,13 @@ function showTree (e) {
   }
 
   const details = document.getElementById('details')
-  const p = JSON.parse(JSON.stringify(feature.properties))
+  const p = {}
+  for (const k in feature.properties) {
+    if (!['assessment', 'osmTrees', 'SE_ANNO_CAD_DATA'].includes(k)) {
+      p[k] = feature.properties[k]
+    }
+  }
+
   delete p.assessment
   delete p.osmTrees
 
