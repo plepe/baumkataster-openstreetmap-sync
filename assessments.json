@@ -6,5 +6,6 @@
   "trees with different NUMMER found": "#af7fff",
   "no trees found": "#af00ff",
   "several trees with same BAUMNUMMER found": "#ff00ff",
-  "tree found, but different start_date": "#ff0000"
+  "tree found, but different start_date": "#ff0000",
+  "tree found, species different": "#ffaf00"
 }

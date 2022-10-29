@@ -124,6 +124,8 @@ function assessTree (katTree, osmTrees) {
   }
 
   const osmTree = matchingTrees[0]
+  const convertedTags = convertBk2OSM(katTree.properties)
+
   if (parseInt(osmTree.tags.start_date) !== katTree.properties.PFLANZJAHR) {
     if (katTree.properties.PFLANZJAHR >= config.lastImportYear) {
       return {
@@ -145,8 +147,35 @@ function assessTree (katTree, osmTrees) {
     }
   }
 
+  if (osmTree.tags.species !== convertedTags.species) {
+    return {
+      text: 'tree found, species different',
+      trees: [osmTree]
+    }
+  }
+
   return {
     text: 'tree found',
     trees: [osmTree]
   }
+}
+
+function convertBk2OSM (properties) {
+  const tags = {
+    denotation: 'urban',
+    natural: 'tree'
+  }
+
+  tags['tree:ref'] = properties.BAUMNUMMER
+  tags['start_date'] = properties.PFLANZJAHR
+
+  const m = properties.GATTUNG_ART.match(/^(.*) \((.*)\)$/)
+  if (m) {
+    tags['species'] = m[1]
+    tags['species.de'] = m[2]
+  } else {
+    console.error("Can't parse GATTUNG_ART", properties.GATTUNG_ART)
+  }
+
+  return tags
 }
