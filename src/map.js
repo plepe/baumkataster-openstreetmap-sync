@@ -141,19 +141,22 @@ function showTree (e) {
   })
   details.appendChild(ul)
 
-  currentOsm = L.geoJSON(osmFeatures, {
-    pointToLayer: function (feature, latlng) {
-      return L.circleMarker(latlng, config.osmMarker)
-    }
-  }).bindPopup(function (osmTree) {
-    const p = {}
-    for (const k in osmTree.feature.properties) {
-      if (!k.match(/^@/)) {
-        p[k] = osmTree.feature.properties[k]
-      }
-    }
+  osmFeatures.features.forEach(
+    feature => {
+      const layer = L.circleMarker([ feature.geometry.coordinates[1], feature.geometry.coordinates[0] ], config.osmMarker)
+      layer.bindPopup(function () {
+        const p = {}
+        for (const k in feature.properties) {
+          if (!k.match(/^@/)) {
+            p[k] = feature.properties[k]
+          }
+        }
+        layer.addTo(map)
 
-    return '<a target="_blank" href="https://openstreetmap.org/' + osmTree.feature.properties['@id'] + '">' + osmTree.feature.properties['@id'] + '</a><br>' +
-      '<pre>' + JSON.stringify(p, null, '  ') + '</pre>'
-  }).addTo(map)
+        return '<a target="_blank" href="https://openstreetmap.org/' + feature.properties['@id'] + '">' + feature.properties['@id'] + '</a><br>' +
+        '<pre>' + JSON.stringify(p, null, '  ') + '</pre>'
+      })
+      layer.addTo(map)
+    }
+  )
 }
