@@ -133,7 +133,7 @@ function showTree (e) {
     const label = document.createElement('a')
     label.href = '#'
     label.className = 'osmTree'
-    label.appendChild(document.createTextNode(f.properties['@id']))
+    label.appendChild(document.createTextNode(f.properties['tree:ref'] || '???'))
     label.onclick = () => {
       f.layer.openPopup()
       return false
