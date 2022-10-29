@@ -21,6 +21,7 @@ window.onload = function () {
         .then(req => req.json())
         .then(body => {
           config = body
+          initMap()
           done()
         }),
     (done) =>
@@ -28,6 +29,7 @@ window.onload = function () {
         .then(req => req.json())
         .then(body => {
           assessments = body
+          initMapKey()
           done()
         }),
     (done) =>
@@ -42,17 +44,18 @@ window.onload = function () {
       global.alert(err)
     }
 
-    init()
     show()
   })
 }
 
-function init () {
+function initMap () {
   map.fitBounds([
     [config.bbox[0], config.bbox[1]],
     [config.bbox[2], config.bbox[3]]
   ])
+}
 
+function initMapKey () {
   const mapKey = document.getElementById('map-key')
   for (const text in assessments) {
     const div = document.createElement('div')
@@ -73,6 +76,7 @@ function init () {
 let currentLayer
 let currentOsm
 function show () {
+  document.getElementById('details').innerHTML = ''
   L.geoJSON(data, {
     pointToLayer: function (feature, latlng) {
       const options = JSON.parse(JSON.stringify(config.treeMarker))
