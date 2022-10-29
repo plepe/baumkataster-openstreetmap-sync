@@ -125,15 +125,25 @@ function showTree (e) {
   pre.setAttribute('wrap', true)
   details.appendChild(pre)
 
-  details.appendChild(document.createTextNode('Possible matches'))
+  details.appendChild(document.createTextNode('Possible matches:'))
 
   const ul = document.createElement('ul')
   osmFeatures.features.forEach(f => {
     const li = document.createElement('li')
+    const label = document.createElement('a')
+    label.href = '#'
+    label.className = 'osmTree'
+    label.appendChild(document.createTextNode(f.properties['@id']))
+    label.onclick = () => {
+      f.layer.openPopup()
+      return false
+    }
+    li.appendChild(label)
+
     const a = document.createElement('a')
     a.href = 'https://openstreetmap.org/' + f.properties['@id']
     a.target = '_blank'
-    a.appendChild(document.createTextNode(f.properties['@id']))
+    a.innerHTML = ' 🔗'
     li.appendChild(a)
 
     li.appendChild(document.createTextNode(' (' + (distance(feature, f, { unit: 'kilometers' }) * 1000).toFixed(0) + 'm)'))
@@ -157,6 +167,7 @@ function showTree (e) {
         '<pre>' + JSON.stringify(p, null, '  ') + '</pre>'
       })
       layer.addTo(map)
+      feature.layer = layer
     }
   )
 }

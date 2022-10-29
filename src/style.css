@@ -1,3 +1,6 @@
+a {
+  text-decoration: none;
+}
 #map {
   position: absolute;
   top: 0; left: 250px; bottom: 0; right: 0;
