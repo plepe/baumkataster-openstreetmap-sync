@@ -1,6 +1,8 @@
 /* global L:false */
+import async from 'async'
 let map
 let config
+let data
 
 window.onload = function () {
   map = L.map('map')
@@ -11,16 +13,29 @@ window.onload = function () {
     maxZoom: 25
   }).addTo(map)
 
-  fetch('conf.json')
-    .then(req => req.json())
-    .then(body => {
-      config = body
-      init()
-    })
+  async.parallel([
+    (done) =>
+      fetch('conf.json')
+        .then(req => req.json())
+        .then(body => {
+          config = body
+          done()
+        }),
+    (done) =>
+      fetch('data/result.geojson')
+        .then(req => req.json())
+        .then(body => {
+          data = body
+          done()
+        })
+  ], (err) => {
+    if (err) {
+      global.alert(err)
+    }
 
-  fetch('data/result.geojson')
-    .then(req => req.json())
-    .then(body => show(body))
+    init()
+    show()
+  })
 }
 
 function init () {
@@ -48,7 +63,7 @@ function init () {
 
 let currentLayer
 let currentOsm
-function show (data) {
+function show () {
   L.geoJSON(data, {
     pointToLayer: function (feature, latlng) {
       const options = JSON.parse(JSON.stringify(config.treeMarker))
