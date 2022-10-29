@@ -1,6 +1,7 @@
 import fs from 'fs'
 import OverpassFrontend from 'overpass-frontend'
 import async from 'async'
+import distance from '@turf/distance'
 
 const config = JSON.parse(fs.readFileSync('conf.json'))
 
@@ -67,7 +68,9 @@ function assess () {
         const result = assessTree(katTree, osmTrees)
 
         katTree.properties.assessment = result.text
-        katTree.properties.osmTrees = result.trees.map(t => t.GeoJSON())
+        katTree.properties.osmTrees = result.trees
+          .map(t => t.GeoJSON())
+          .sort((a, b) => distance(katTree, a) - distance(katTree, b))
         console.log(katTree.properties.OBJECTID + ': ' + result.text)
 
         callback(null, katTree)
