@@ -9,7 +9,7 @@
     "tree found, replaced": "#007f00",
     "tree found, logged": "#007faf",
     "trees without NUMMER found": "#0000ff",
-    "tree without NUMMER found": "#007fff",
+    "trees with different NUMMER found": "#af7fff",
     "no trees found": "#af00ff",
     "several trees with same BAUMNUMMER found": "#ff00ff",
     "tree found, but different start_date": "#ff0000"

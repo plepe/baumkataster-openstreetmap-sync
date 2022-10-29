@@ -101,15 +101,17 @@ function assessTree (katTree, osmTrees) {
       return !('tree:ref' in osmTree.tags)
     })
 
-    if (matchingTreesWithoutNR.length > 1) {
+    if (matchingTreesWithoutNR.length) {
       return {
         text: 'trees without NUMMER found',
         trees: matchingTreesWithoutNR
       }
-    } else if (matchingTreesWithoutNR.length === 1) {
+    }
+
+    if (osmTrees.length) {
       return {
-        text: 'tree without NUMMER found',
-        trees: matchingTreesWithoutNR
+        text: 'trees with different NUMMER found',
+        trees: osmTrees
       }
     }
 
