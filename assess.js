@@ -134,16 +134,18 @@ function assessTree (katTree, osmTrees) {
       }
     }
 
-    if (katTree.properties.PFLANZJAHR === 0) {
+    if (katTree.properties.GATTUNG_ART === 'Jungbaum wird gepflanzt') {
       return {
-        text: 'tree found, logged',
+        text: 'tree found, being replaced',
         trees: [osmTree]
       }
     }
 
-    return {
-      text: 'tree found, but different start_date',
-      trees: [osmTree]
+    if (katTree.properties.PFLANZJAHR !== 0 || 'start_date' in osmTree.tags) {
+      return {
+        text: 'tree found, but different start_date',
+        trees: [osmTree]
+      }
     }
   }
 

@@ -1,7 +1,7 @@
 {
   "tree found": "#00af00",
   "tree found, replaced": "#007f00",
-  "tree found, logged": "#007faf",
+  "tree found, being replaced": "#007faf",
   "trees without NUMMER found": "#0000ff",
   "trees with different NUMMER found": "#af7fff",
   "no trees found": "#af00ff",
