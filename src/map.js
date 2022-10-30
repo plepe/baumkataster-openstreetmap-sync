@@ -132,10 +132,7 @@ function showTree (e) {
   details.innerHTML = ''
   details.appendChild(document.createTextNode(feature.properties.assessment))
 
-  const pre = document.createElement('pre')
-  pre.appendChild(document.createTextNode(JSON.stringify(p, null, '  ')))
-  pre.setAttribute('wrap', true)
-  details.appendChild(pre)
+  details.appendChild(showTags(p))
 
   details.appendChild(document.createTextNode('Possible matches:'))
 
@@ -175,12 +172,21 @@ function showTree (e) {
         }
         layer.addTo(map)
 
-        return '<a target="_blank" href="https://openstreetmap.org/' + feature.properties['@id'] + '">' + feature.properties['@id'] + '</a><br>' +
-        '<pre>' + JSON.stringify(p, null, '  ') + '</pre>'
+        const div = document.createElement('div')
+        div.innerHTML = '<a target="_blank" href="https://openstreetmap.org/' + feature.properties['@id'] + '">' + feature.properties['@id'] + '</a>'
+        div.appendChild(showTags(p))
+        return div
       })
       layer.addTo(map)
       feature.layer = layer
       return layer
     }
   )
+}
+
+function showTags (tags) {
+  const pre = document.createElement('pre')
+  pre.setAttribute('wrap', true)
+  pre.appendChild(document.createTextNode(JSON.stringify(tags, null, '  ')))
+  return pre
 }

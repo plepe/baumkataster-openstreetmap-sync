@@ -20,4 +20,5 @@ a {
 }
 pre {
   font-size: 8pt;
+  min-width: 200px;
 }
