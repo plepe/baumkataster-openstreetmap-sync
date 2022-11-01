@@ -202,6 +202,13 @@ function showTree (e) {
         const div = document.createElement('div')
         div.innerHTML = '<a target="_blank" href="https://openstreetmap.org/' + osmFeature.properties['@id'] + '">' + osmFeature.properties['@id'] + '</a>'
         div.appendChild(showTags(p))
+
+        app.emit('osm-popup', {
+          katasterTree: feature,
+          osmTree: osmFeature,
+          popup: div
+        })
+
         return div
       })
       layer.addTo(map)
