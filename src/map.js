@@ -1,8 +1,10 @@
 /* global L:false */
 import async from 'async'
 import distance from '@turf/distance'
+import josm from './josm'
 
 const modules = [
+  josm
 ]
 
 let map
