@@ -1,6 +1,10 @@
 /* global L:false */
 import async from 'async'
 import distance from '@turf/distance'
+
+const modules = [
+]
+
 let map
 let config
 let data
@@ -37,7 +41,9 @@ window.onload = function () {
         .then(body => {
           data = body
           done()
-        })
+        }),
+    (done) =>
+      async.each(modules, (module, done) => module.init(config, done), done)
   ], (err) => {
     if (err) {
       global.alert(err)
