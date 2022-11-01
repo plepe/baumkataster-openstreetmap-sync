@@ -1,8 +1,8 @@
-let config
+let app
 
 module.exports = {
-  init (_config, callback) {
-    config = _config
+  init (_app, callback) {
+    app = _app
     callback()
   }
 }

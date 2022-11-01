@@ -1,6 +1,8 @@
 /* global L:false */
 import async from 'async'
 import distance from '@turf/distance'
+import Events from 'events'
+
 import josm from './josm'
 
 const modules = [
@@ -11,6 +13,22 @@ let map
 let config
 let data
 let assessments
+let app
+
+class App extends Events {
+  constructor (config) {
+    super()
+    this.config = config
+  }
+
+  init (callback) {
+    async.each(
+      modules,
+      (module, done) => module.init(this, done),
+      callback
+    )
+  }
+}
 
 window.onload = function () {
   map = L.map('map')
@@ -43,16 +61,17 @@ window.onload = function () {
         .then(body => {
           data = body
           done()
-        }),
-    (done) =>
-      async.each(modules, (module, done) => module.init(config, done), done)
+        })
   ], (err) => {
     if (err) {
       global.alert(err)
     }
 
-    initMapKey()
-    show()
+    app = new App(config)
+    app.init(() => {
+      initMapKey()
+      show()
+    })
   })
 }
 
