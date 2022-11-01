@@ -2,6 +2,7 @@ import fs from 'fs'
 import OverpassFrontend from 'overpass-frontend'
 import async from 'async'
 import distance from '@turf/distance'
+import { convertKataster2OSM } from './src/convertKataster2OSM.js'
 
 const config = JSON.parse(fs.readFileSync('conf.json'))
 
@@ -124,7 +125,7 @@ function assessTree (katTree, osmTrees) {
   }
 
   const osmTree = matchingTrees[0]
-  const convertedTags = convertBk2OSM(katTree.properties)
+  const convertedTags = convertKataster2OSM(katTree.properties)
 
   if (parseInt(osmTree.tags.start_date) !== katTree.properties.PFLANZJAHR) {
     if (katTree.properties.PFLANZJAHR >= config.lastImportYear) {
@@ -160,34 +161,4 @@ function assessTree (katTree, osmTrees) {
     text: 'tree found',
     trees: [osmTree]
   }
-}
-
-function convertBk2OSM (properties) {
-  const tags = {
-    denotation: 'urban',
-    natural: 'tree'
-  }
-
-  tags['tree:ref'] = properties.BAUMNUMMER
-  tags.start_date = properties.PFLANZJAHR
-
-  if (properties.GATTUNG_ART === 'Jungbaum wird gepflanzt') {
-    tags.species = 'none'
-  } else {
-    const m = properties.GATTUNG_ART.match(/^([^']+) ('(.*)' )?\((.*)\)$/)
-    if (m) {
-      tags.taxon = m[1]
-      tags.species = m[1]
-      tags['species:de'] = m[4]
-
-      if (m[2]) {
-        tags.taxon = m[1] + ' ' + m[3]
-        tags['taxon:cultivar'] = m[3]
-      }
-    } else {
-      console.error("Can't parse GATTUNG_ART", properties.GATTUNG_ART)
-    }
-  }
-
-  return tags
 }
