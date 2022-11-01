@@ -162,7 +162,7 @@ function showTree (e) {
 
   currentOsm = osmFeatures.features.map(
     feature => {
-      const layer = L.circleMarker([ feature.geometry.coordinates[1], feature.geometry.coordinates[0] ], config.osmMarker)
+      const layer = L.circleMarker([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], config.osmMarker)
       layer.bindPopup(function () {
         const p = {}
         for (const k in feature.properties) {
