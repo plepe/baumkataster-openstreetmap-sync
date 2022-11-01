@@ -188,24 +188,24 @@ function showTree (e) {
   details.appendChild(ul)
 
   currentOsm = osmFeatures.features.map(
-    feature => {
-      const layer = L.circleMarker([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], config.osmMarker)
+    osmFeature => {
+      const layer = L.circleMarker([osmFeature.geometry.coordinates[1], osmFeature.geometry.coordinates[0]], config.osmMarker)
       layer.bindPopup(function () {
         const p = {}
-        for (const k in feature.properties) {
+        for (const k in osmFeature.properties) {
           if (!k.match(/^@/)) {
-            p[k] = feature.properties[k]
+            p[k] = osmFeature.properties[k]
           }
         }
         layer.addTo(map)
 
         const div = document.createElement('div')
-        div.innerHTML = '<a target="_blank" href="https://openstreetmap.org/' + feature.properties['@id'] + '">' + feature.properties['@id'] + '</a>'
+        div.innerHTML = '<a target="_blank" href="https://openstreetmap.org/' + osmFeature.properties['@id'] + '">' + osmFeature.properties['@id'] + '</a>'
         div.appendChild(showTags(p))
         return div
       })
       layer.addTo(map)
-      feature.layer = layer
+      osmFeature.layer = layer
       return layer
     }
   )
