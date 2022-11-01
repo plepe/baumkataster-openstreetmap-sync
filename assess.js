@@ -157,6 +157,15 @@ function assessTree (katTree, osmTrees) {
     }
   }
 
+  if (osmTree.tags.circumference !== convertedTags.circumference ||
+      osmTree.tags.diameter_crown !== convertedTags.diameter_crown ||
+      osmTree.tags.height !== convertedTags.height) {
+    return {
+      text: 'tree found, changed values',
+      trees: [osmTree]
+    }
+  }
+
   return {
     text: 'tree found',
     trees: [osmTree]

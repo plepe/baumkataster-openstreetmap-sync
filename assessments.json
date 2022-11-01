@@ -1,5 +1,6 @@
 {
-  "tree found": "#00af00",
+  "tree found": "#00ff00",
+  "tree found, changed values": "#00af00",
   "tree found, replaced": "#007f00",
   "tree found, being replaced": "#007faf",
   "trees without NUMMER found": "#0000ff",
