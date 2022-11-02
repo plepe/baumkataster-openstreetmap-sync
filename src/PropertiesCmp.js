@@ -8,7 +8,8 @@ const fields = [
       a.href = 'https://openstreetmap.org/' + tags['@id']
       a.innerHTML = tags['@id']
       return a
-    }
+    },
+    compare: (kat, osm) => null
   },
   {
     title: 'Distance',
@@ -34,17 +35,44 @@ const fields = [
   {
     title: 'Height',
     kat: 'BAUMHOEHE_TXT',
-    osm: 'height'
+    osm: 'height',
+    compare: (kat, osm) => {
+      const m = kat.BAUMHOEHE_TXT.match(/^([0-9]+)-([0-9]+) m$/)
+      if (m) {
+        return 'height' in osm && parseFloat(osm.height) >= parseFloat(m[1]) && parseFloat(osm.height) <= parseFloat(m[2])
+      } else {
+        const m1 = kat.BAUMHOEHE_TXT.match(/^> ([0-9]+) m$/)
+        if (m1) {
+          return 'height' in osm && parseFloat(osm.height) >= parseFloat(m[1])
+        }
+        return !('height' in osm)
+      }
+    }
   },
   {
     title: 'Crown diameter',
     kat: 'KRONENDURCHMESSER_TXT',
-    osm: 'diameter_crown'
+    osm: 'diameter_crown',
+    compare: (kat, osm) => {
+      const m = kat.KRONENDURCHMESSER_TXT.match(/^([0-9]+)-([0-9]+) m$/)
+      if (m) {
+        return 'diameter_crown' in osm && parseFloat(osm.diameter_crown) >= parseFloat(m[1]) && parseFloat(osm.diameter_crown) <= parseFloat(m[2])
+      } else {
+        const m1 = kat.KRONENDURCHMESSER_TXT.match(/^>([0-9]+) m$/)
+        if (m1) {
+          return 'diameter_crown' in osm && parseFloat(osm.diameter_crown) >= parseFloat(m[1])
+        }
+        return !('diameter_crown' in osm)
+      }
+    }
   },
   {
     title: 'Trunk circumference',
     kat: 'STAMMUMFANG_TXT',
-    osm: 'circumference'
+    osm: 'circumference',
+    compare: (kat, osm) => {
+      return Math.abs(kat.STAMMUMFANG / 100 - parseFloat(osm.circumference)) < 0.01
+    }
   },
   {
     title: 'District',
@@ -127,17 +155,7 @@ export class PropertiesCmp {
       }
 
       const field = f[column]
-      let value
-
-      if (typeof field === 'string') {
-        value = '' + (properties[field] || '')
-      } else if (typeof field === 'function') {
-        value = field(properties)
-      }
-
-      if (typeof value === 'string') {
-        value = document.createTextNode(value)
-      }
+      let value = this.getValue(properties, field)
 
       while (td.firstChild) {
         td.removeChild(td.firstChild)
@@ -145,6 +163,42 @@ export class PropertiesCmp {
 
       if (value) {
         td.appendChild(value)
+      }
+    })
+  }
+
+  getValue (properties, field) {
+    let value
+
+    if (typeof field === 'string') {
+      value = '' + (properties[field] || '')
+    } else if (typeof field === 'function') {
+      value = field(properties)
+    }
+
+    if (typeof value === 'string') {
+      value = document.createTextNode(value)
+    }
+
+    return value
+  }
+
+  compare (kat, osm) {
+    fields.forEach((f, i) => {
+      const tr = this.table.rows[i + 1]
+      let result = null
+      if (!('compare' in f) && 'kat' in f && 'osm' in f) {
+        result = this.getValue(kat, f.kat).textContent === this.getValue(osm, f.osm).textContent
+      } else if (f.compare) {
+        result = f.compare(kat, osm)
+      }
+
+      tr.classList.remove('correct')
+      tr.classList.remove('wrong')
+      if (result === true) {
+        tr.classList.add('correct')
+      } else if (result === false) {
+        tr.classList.add('wrong')
       }
     })
   }

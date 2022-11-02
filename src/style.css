@@ -38,6 +38,12 @@ pre {
 .properties-cmp {
   border-collapse: collapse;
 }
+.properties-cmp tr.correct {
+  background: #afffaf;
+}
+.properties-cmp tr.wrong {
+  background: #ffafaf;
+}
 .properties-cmp th,
 .properties-cmp td {
   border: 1px solid black;

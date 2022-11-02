@@ -61,7 +61,7 @@ export function showTree (_app, feature, layer) {
 
   const select = document.createElement('select')
   select.onchange = () => {
-    highlightOsm(osmFeatures.features[select.value])
+    highlightOsm(feature, osmFeatures.features[select.value])
   }
   if (osmFeatures.features.length) {
     osmFeatures.features.forEach((osmFeature, i) => {
@@ -74,13 +74,18 @@ export function showTree (_app, feature, layer) {
       select.appendChild(option)
     })
 
-    table.setHeader(select, 'osm')
-    highlightOsm(osmFeatures.features[0])
+    const span = document.createElement('span')
+    span.innerHTML = 'Possible OSM:<br>'
+    span.appendChild(select)
+
+    table.setHeader(span, 'osm')
+    highlightOsm(feature, osmFeatures.features[0])
   }
 }
 
-function highlightOsm (osmFeature) {
+function highlightOsm (katFeature, osmFeature) {
   table.show(osmFeature.properties, 'osm')
+  table.compare(katFeature.properties, osmFeature.properties)
 
   clearOsm()
 
