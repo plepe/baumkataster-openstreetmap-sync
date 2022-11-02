@@ -38,34 +38,6 @@ export function showTree (_app, feature, layer) {
   details.innerHTML = ''
   details.appendChild(document.createTextNode(feature.properties.assessment))
 
-  details.appendChild(showTags(p))
-
-  details.appendChild(document.createTextNode('Possible matches:'))
-
-  const ul = document.createElement('ul')
-  osmFeatures.features.forEach(f => {
-    const li = document.createElement('li')
-    const label = document.createElement('a')
-    label.href = '#'
-    label.className = 'osmTree'
-    label.appendChild(document.createTextNode(f.properties['tree:ref'] || '???'))
-    label.onclick = () => {
-      f.layer.openPopup()
-      return false
-    }
-    li.appendChild(label)
-
-    const a = document.createElement('a')
-    a.href = 'https://openstreetmap.org/' + f.properties['@id']
-    a.target = '_blank'
-    a.innerHTML = ' 🔗'
-    li.appendChild(a)
-
-    li.appendChild(document.createTextNode(' (' + (distance(feature, f, { unit: 'kilometers' }) * 1000).toFixed(0) + 'm)'))
-    ul.appendChild(li)
-  })
-  details.appendChild(ul)
-
   table = new PropertiesCmp()
   details.appendChild(table.init())
 
@@ -122,13 +94,6 @@ function highlightOsm (osmFeature) {
   layer.addTo(map.map)
   osmFeature.layer = layer
   return layer
-}
-
-function showTags (tags) {
-  const pre = document.createElement('pre')
-  pre.setAttribute('wrap', true)
-  pre.appendChild(document.createTextNode(JSON.stringify(tags, null, '  ')))
-  return pre
 }
 
 function clearOsm () {
