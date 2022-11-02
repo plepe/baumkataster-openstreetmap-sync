@@ -94,14 +94,13 @@ export class PropertiesCmp {
       let value
 
       if (typeof field === 'string') {
-        value = document.createTextNode(properties[field] || '')
+        value = '' + (properties[field] || '')
       } else if (typeof field === 'function') {
-        const v = field(properties)
-        if (typeof v === 'string') {
-          value = document.createTextNode(v)
-        } else {
-          value = v
-        }
+        value = field(properties)
+      }
+
+      if (typeof value === 'string') {
+        value = document.createTextNode(value)
       }
 
       while (td.firstChild) {
