@@ -22,3 +22,8 @@ pre {
   font-size: 8pt;
   min-width: 200px;
 }
+#status {
+  border-top: 1px solid black;
+  max-height: 5em;
+  overflow: scroll;
+}

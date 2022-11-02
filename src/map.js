@@ -4,6 +4,7 @@ import distance from '@turf/distance'
 import Events from 'events'
 
 import josm from './josm'
+import { StatusMessage } from './status'
 
 const modules = [
   josm
@@ -48,20 +49,26 @@ window.onload = function () {
           initMap()
           done()
         }),
-    (done) =>
+    (done) => {
+      const log = new StatusMessage('Loading assessments ...')
       fetch('assessments.json')
         .then(req => req.json())
         .then(body => {
           assessments = body
+          log.change('Loading assessments ... done')
           done()
-        }),
-    (done) =>
+        })
+    },
+    (done) => {
+      const log = new StatusMessage('Loading baumkataster ...')
       fetch('data/result.geojson')
         .then(req => req.json())
         .then(body => {
           data = body
+          log.change('Loading baumkataster ... done')
           done()
         })
+    }
   ], (err) => {
     if (err) {
       global.alert(err)
