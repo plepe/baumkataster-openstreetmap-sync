@@ -5,13 +5,15 @@ import { PropertiesCmp } from './PropertiesCmp'
 
 let currentLayer
 let currentOsm
+let table
+let app
 
-export function showTree (app, feature, layer) {
+export function showTree (_app, feature, layer) {
+  app = _app
+
+  clearOsm()
   if (currentLayer) {
     currentLayer.setStyle({ fillOpacity: 0 })
-  }
-  if (currentOsm) {
-    currentOsm.forEach(l => l.removeFrom(map.map))
   }
 
   layer.setStyle({ fillOpacity: 1 })
@@ -64,44 +66,62 @@ export function showTree (app, feature, layer) {
   })
   details.appendChild(ul)
 
-  const table = new PropertiesCmp()
+  table = new PropertiesCmp()
   details.appendChild(table.init())
 
   table.show(feature.properties, 'kat')
 
-  if (osmFeatures.features.length) {
-    table.show(osmFeatures.features[0].properties, 'osm')
+  const select = document.createElement('select')
+  select.onchange = () => {
+    highlightOsm(osmFeatures.features[select.value])
   }
+  if (osmFeatures.features.length) {
+    osmFeatures.features.forEach((osmFeature, i) => {
+      const _distance = distance(feature, osmFeature, { unit: 'kilometers' }) * 1000
+      osmFeature.properties['@distance'] = _distance
 
-  currentOsm = osmFeatures.features.map(
-    osmFeature => {
-      const layer = L.circleMarker([osmFeature.geometry.coordinates[1], osmFeature.geometry.coordinates[0]], app.config.osmMarker)
-      layer.bindPopup(function () {
-        const p = {}
-        for (const k in osmFeature.properties) {
-          if (!k.match(/^@/)) {
-            p[k] = osmFeature.properties[k]
-          }
-        }
-        layer.addTo(map.map)
+      const option = document.createElement('option')
+      option.value = i
+      option.appendChild(document.createTextNode(osmFeature.properties['@id'] + ' (' + _distance.toFixed(0) + 'm)'))
+      select.appendChild(option)
+    })
 
-        const div = document.createElement('div')
-        div.innerHTML = '<a target="_blank" href="https://openstreetmap.org/' + osmFeature.properties['@id'] + '">' + osmFeature.properties['@id'] + '</a>'
-        div.appendChild(showTags(p))
+    table.setHeader(select, 'osm')
+    highlightOsm(osmFeatures.features[0])
+  }
+}
 
-        app.emit('osm-popup', {
-          katasterTree: feature,
-          osmTree: osmFeature,
-          popup: div
-        })
+function highlightOsm (osmFeature) {
+  table.show(osmFeature.properties, 'osm')
 
-        return div
-      })
-      layer.addTo(map.map)
-      osmFeature.layer = layer
-      return layer
+  clearOsm()
+
+  const layer = L.circleMarker([osmFeature.geometry.coordinates[1], osmFeature.geometry.coordinates[0]], app.config.osmMarker)
+  currentOsm.push(layer)
+  layer.bindPopup(function () {
+    const p = {}
+    for (const k in osmFeature.properties) {
+      if (!k.match(/^@/)) {
+        p[k] = osmFeature.properties[k]
+      }
     }
-  )
+    layer.addTo(map.map)
+
+    const div = document.createElement('div')
+    div.innerHTML = '<a target="_blank" href="https://openstreetmap.org/' + osmFeature.properties['@id'] + '">' + osmFeature.properties['@id'] + '</a>'
+    div.appendChild(showTags(p))
+
+    app.emit('osm-popup', {
+      katasterTree: feature,
+      osmTree: osmFeature,
+      popup: div
+    })
+
+    return div
+  })
+  layer.addTo(map.map)
+  osmFeature.layer = layer
+  return layer
 }
 
 function showTags (tags) {
@@ -109,4 +129,11 @@ function showTags (tags) {
   pre.setAttribute('wrap', true)
   pre.appendChild(document.createTextNode(JSON.stringify(tags, null, '  ')))
   return pre
+}
+
+function clearOsm () {
+  if (currentOsm) {
+    currentOsm.forEach(l => l.removeFrom(map.map))
+  }
+  currentOsm = []
 }
