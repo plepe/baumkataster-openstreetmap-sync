@@ -1,5 +1,6 @@
 import { showTree } from './showTree'
 import assessments from './assessments.json'
+import { assessTree } from './assessTree.js'
 
 let app
 
@@ -10,14 +11,77 @@ export class Tree {
 
   show () {
     const options = JSON.parse(JSON.stringify(app.config.treeMarker))
-    if (this.feature.properties.assessment in assessments) {
-      options.color = assessments[this.feature.properties.assessment]
+    if (this.assessment in assessments) {
+      options.color = assessments[this.assessment]
+    }
+
+    if (this.layer) {
+      this.layer.setStyle(options)
+      return
     }
 
     this.layer = L.circleMarker([this.feature.geometry.coordinates[1], this.feature.geometry.coordinates[0]], options)
     this.layer.addTo(app.map)
     this.layer.on({
-      click: (e) => showTree(app, this.feature, this.layer)
+      click: (e) => {
+        this.assess(() => {
+          this.feature.properties.osmTrees = this.osmTrees // TODO: remove
+          this.feature.properties.assessment = this.assessment // TODO: remove
+          showTree(app, this.feature, this.layer)
+        })
+      }
+    })
+  }
+
+  loadNearbyOSMTrees (callback) {
+    if (this.osmTrees) {
+      return callback(null, this.osmTrees)
+    }
+
+    const osmTrees = []
+    const coord = this.feature.geometry.coordinates
+    const query = 'node[natural=tree](around:' + app.config.searchDistance + ',' + coord[1] + ',' + coord[0] + ')'
+    app.overpassFrontend.BBoxQuery(
+      query,
+      null,
+      {},
+      (err, osmTree) => {
+        if (err) { return console.error(err) }
+        osmTrees.push(osmTree.GeoJSON())
+      },
+      (err) => {
+        if (err) { callback(err) }
+
+        callback(null, osmTrees)
+      }
+    )
+  }
+
+  assess (callback) {
+    if (this.assessment) {
+      return callback(null, {
+        text: this.assessment,
+        trees: this.osmTrees
+      })
+    }
+
+    this.loadNearbyOSMTrees((err, nearbyTrees) => {
+      if (err) { return callback(err) }
+
+      const result = assessTree(this.feature, nearbyTrees)
+
+      this.assessment = result.text
+      this.osmTrees = result.trees
+
+      if (this.layer) {
+        this.show()
+      }
+
+//        .map(t => t.GeoJSON())
+//        .sort((a, b) => distance(katTree, a) - distance(katTree, b))
+//      console.log(katTree.properties.OBJECTID + ': ' + result.text)
+
+      callback(null, result)
     })
   }
 }

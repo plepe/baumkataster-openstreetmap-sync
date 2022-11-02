@@ -6,12 +6,16 @@ import josm from './josm'
 import { map } from './map'
 import { Tree } from './Tree'
 import { mapKey } from './mapKey'
+import { assessTree } from './assessTree'
 import { StatusMessage } from './status'
+import { overpassFrontend } from './overpassFrontend'
 
 const modules = [
   josm,
   map,
   mapKey,
+  assessTree,
+  overpassFrontend,
   Tree
 ]
 
