@@ -21,23 +21,62 @@ function toAddTags (p) {
       .join('%7C')
 }
 
-function showOsmPopup ({katasterTree, osmTree, popup}) {
-  const action = document.createElement('span')
-  action.innerHTML = 'JOSM'
-  action.onclick = () => {
-    const id = osmTree.properties['@id'].substr(0, 1) + osmTree.properties['@id'].split('/')[1]
-    const tags = convertKataster2OSM(katasterTree.properties)
-    let p = 'load_object?objects=' + id + '&addtags=' + toAddTags(tags)
-    exec(p)
+function addActions ({katasterTree, osmTree}) {
+  let actions = document.getElementById('actions')
+  if (!actions) {
+    actions = document.createElement('div')
+    actions.id = 'actions'
+    actions.innerHTML = '<h4>Actions</h4>'
+    document.getElementById('details').appendChild(actions)
   }
 
-  popup.appendChild(action)
+  let action
+  if (osmTree) {
+    action = document.createElement('div')
+    action.className = 'josm'
+    action.innerHTML = 'Update current tree via JOSM remote control'
+    action.onclick = () => {
+      const id = osmTree.properties['@id'].substr(0, 1) + osmTree.properties['@id'].split('/')[1]
+      const tags = convertKataster2OSM(katasterTree.properties)
+      let p = 'load_object?objects=' + id + '&addtags=' + toAddTags(tags)
+      exec(p)
+    }
+    actions.appendChild(action)
+  }
+
+  action = document.createElement('div')
+  action.className = 'josm'
+  action.innerHTML = 'Create new tree via JOSM remote control'
+  action.onclick = () => {
+    const tags = convertKataster2OSM(katasterTree.properties)
+    let p = 'add_node?lon=' + katasterTree.geometry.coordinates[0] + '&lat=' + katasterTree.geometry.coordinates[1] + '&addtags=' + toAddTags(tags)
+    exec(p)
+  }
+  actions.appendChild(action)
+}
+
+function hideActions () {
+  const actions = document.getElementById('actions')
+  if (!actions) {
+    return
+  }
+
+  let current = actions.firstChild
+  while (current) {
+    const next = current.nextSibling
+    if (current.className === 'josm') {
+      actions.removeChild(current)
+    }
+
+    current = next
+  }
 }
 
 module.exports = {
   init (_app, callback) {
     app = _app
-    app.on('osm-popup', showOsmPopup)
+    app.on('tree-show', addActions)
+    app.on('tree-hide', hideActions)
 
     callback()
   }

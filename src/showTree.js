@@ -59,6 +59,10 @@ export function showTree (_app, feature, layer) {
 
   table.show(feature.properties, 'kat')
 
+  app.emit('tree-show', {
+    katasterTree: feature
+  })
+
   const select = document.createElement('select')
   select.onchange = () => {
     highlightOsm(feature, osmFeatures.features[select.value])
@@ -104,16 +108,16 @@ function highlightOsm (katFeature, osmFeature) {
     div.innerHTML = '<a target="_blank" href="https://openstreetmap.org/' + osmFeature.properties['@id'] + '">' + osmFeature.properties['@id'] + '</a>'
     div.appendChild(showTags(p))
 
-    app.emit('osm-popup', {
-      katasterTree: feature,
-      osmTree: osmFeature,
-      popup: div
-    })
-
     return div
   })
   layer.addTo(map.map)
   osmFeature.layer = layer
+
+  app.emit('tree-show', {
+    katasterTree: katFeature,
+    osmTree: osmFeature
+  })
+
   return layer
 }
 
@@ -122,4 +126,6 @@ function clearOsm () {
     currentOsm.forEach(l => l.removeFrom(map.map))
   }
   currentOsm = []
+
+  app.emit('tree-hide')
 }
