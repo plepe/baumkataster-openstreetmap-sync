@@ -4,7 +4,7 @@
   "description": "Script to synchronize updates from Vienna Baumkataster into OpenStreetMap",
   "type": "module",
   "scripts": {
-    "build": "browserify src/map.js -p esmify -o dist/map.js",
+    "build": "browserify src/app.js -p esmify -o dist/app.js",
     "download-baumkataster": "node download-baumkataster.js",
     "download-openstreetmap": "node download-openstreetmap.js",
     "download-all": "npm-run-all -p download-baumkataster download-openstreetmap",
@@ -12,7 +12,7 @@
     "lint": "standard --fix *.js src/*.js",
     "prepare": "npm-run-all build",
     "start": "http-server ./ -p 8000",
-    "watch": "watchify --debug src/map.js -p esmify -o dist/map.js -v"
+    "watch": "watchify --debug src/app.js -p esmify -o dist/app.js -v"
   },
   "repository": {
     "type": "git",
