@@ -3,20 +3,25 @@ a {
 }
 #map {
   position: absolute;
-  top: 0; left: 250px; bottom: 0; right: 0;
+  top: 0; left: 500px; bottom: 0; right: 0;
 }
 .sidebar {
   display: none;
   box-sizing: border-box;
   position: absolute;
-  top: 0; left: 0; bottom: 0; width: 250px;
+  top: 0; left: 0; bottom: 0; width: 500px;
   border-right: 1px solid black;
   overflow-y: auto;
 }
-body.main > #main,
 body.details > #details {
   display: block;
 }
+body.main > #main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 #map-key > div {
   display: flex;
 }
@@ -26,7 +31,7 @@ pre {
 }
 #status {
   border-top: 1px solid black;
-  max-height: 5em;
+  height: 5em;
   overflow: scroll;
 }
 
@@ -36,6 +41,10 @@ pre {
 .properties-cmp th,
 .properties-cmp td {
   border: 1px solid black;
+}
+.properties-cmp td.osm,
+.properties-cmp td.kat {
+  width: 50%;
 }
 .closeButton {
   font-size: 16pt;
