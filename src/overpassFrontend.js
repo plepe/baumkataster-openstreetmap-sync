@@ -6,7 +6,7 @@ let app
 export const overpassFrontend = {
   init (_app, callback) {
     app = _app
-    app.overpassFrontend = new OverpassFrontend('data/openstreetmap.json')
+    app.overpassFrontend = new OverpassFrontend(app.config.overpassUrl || 'https://www.overpass-api.de/api/interpreter')
     callback()
 
     const log = new StatusMessage('initialize OSM cache ... ')
