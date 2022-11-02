@@ -6,6 +6,7 @@ import josm from './josm'
 import { map } from './map'
 import { showTree } from './showTree'
 import { StatusMessage } from './status'
+import assessments from './assessments.json'
 
 const modules = [
   josm,
@@ -13,7 +14,6 @@ const modules = [
 ]
 
 let data
-let assessments
 let app
 
 class App extends Events {
@@ -46,16 +46,6 @@ class App extends Events {
             this.config = body
             done()
           }),
-      (done) => {
-        const log = new StatusMessage('Loading assessments ...')
-        fetch('assessments.json')
-          .then(req => req.json())
-          .then(body => {
-            assessments = body
-            log.change('Loading assessments ... done')
-            done()
-          })
-      },
       (done) => {
         const log = new StatusMessage('Loading baumkataster ...')
         fetch('data/result.geojson')
