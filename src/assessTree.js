@@ -4,7 +4,7 @@ let app
 
 export function assessTree (katTree, osmTrees) {
   const matchingTrees = osmTrees.filter(osmTree => {
-    return osmTree.tags['tree:ref'] === katTree.properties.BAUMNUMMER
+    return osmTree.properties['tree:ref'] === katTree.properties.BAUMNUMMER
   })
 
   if (matchingTrees.length > 1) {
@@ -16,7 +16,7 @@ export function assessTree (katTree, osmTrees) {
 
   if (matchingTrees.length === 0) {
     const matchingTreesWithoutNR = osmTrees.filter(osmTree => {
-      return !('tree:ref' in osmTree.tags)
+      return !('tree:ref' in osmTree.properties)
     })
 
     if (matchingTreesWithoutNR.length) {
@@ -42,7 +42,7 @@ export function assessTree (katTree, osmTrees) {
   const osmTree = matchingTrees[0]
   const convertedTags = convertKataster2OSM(katTree.properties)
 
-  if (parseInt(osmTree.tags.start_date) !== katTree.properties.PFLANZJAHR) {
+  if (parseInt(osmTree.properties.start_date) !== katTree.properties.PFLANZJAHR) {
     if (katTree.properties.PFLANZJAHR >= app.config.lastImportYear) {
       return {
         text: 'tree found, replaced',
@@ -57,7 +57,7 @@ export function assessTree (katTree, osmTrees) {
       }
     }
 
-    if (katTree.properties.PFLANZJAHR !== 0 || 'start_date' in osmTree.tags) {
+    if (katTree.properties.PFLANZJAHR !== 0 || 'start_date' in osmTree.properties) {
       return {
         text: 'tree found, but different start_date',
         trees: [osmTree]
@@ -65,16 +65,16 @@ export function assessTree (katTree, osmTrees) {
     }
   }
 
-  if (osmTree.tags.species !== convertedTags.species) {
+  if (osmTree.properties.species !== convertedTags.species) {
     return {
       text: 'tree found, species different',
       trees: [osmTree]
     }
   }
 
-  if (osmTree.tags.circumference !== convertedTags.circumference ||
-      osmTree.tags.diameter_crown !== convertedTags.diameter_crown ||
-      osmTree.tags.height !== convertedTags.height) {
+  if (osmTree.properties.circumference !== convertedTags.circumference ||
+      osmTree.properties.diameter_crown !== convertedTags.diameter_crown ||
+      osmTree.properties.height !== convertedTags.height) {
     return {
       text: 'tree found, changed values',
       trees: [osmTree]

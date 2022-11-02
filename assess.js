@@ -75,7 +75,7 @@ function assess () {
       {},
       function (err, osmTree) {
         if (err) { return console.error(err) }
-        osmTrees.push(osmTree)
+        osmTrees.push(osmTree.GeoJSON())
       },
       function (err) {
         if (err) { callback(err) }
@@ -84,7 +84,6 @@ function assess () {
 
         katTree.properties.assessment = result.text
         katTree.properties.osmTrees = result.trees
-          .map(t => t.GeoJSON())
           .sort((a, b) => distance(katTree, a) - distance(katTree, b))
         console.log(katTree.properties.OBJECTID + ': ' + result.text)
 
