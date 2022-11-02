@@ -4,13 +4,14 @@ import distance from '@turf/distance'
 import Events from 'events'
 
 import josm from './josm'
+import { map } from './map'
 import { StatusMessage } from './status'
 
 const modules = [
-  josm
+  josm,
+  map
 ]
 
-let map
 let data
 let assessments
 let app
@@ -23,7 +24,6 @@ class App extends Events {
   }
 
   init () {
-    this.initMap()
     this.load((err) => {
       if (err) { return global.alert(err) }
 
@@ -37,16 +37,6 @@ class App extends Events {
         }
       )
     })
-  }
-
-  initMap () {
-    map = L.map('map')
-
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      maxNativeZoom: 19,
-      maxZoom: 25
-    }).addTo(map)
   }
 
   load (callback) {
@@ -88,11 +78,6 @@ class App extends Events {
   }
 
   initMapKey () {
-    map.fitBounds([
-      [this.config.bbox[0], this.config.bbox[1]],
-      [this.config.bbox[2], this.config.bbox[3]]
-    ])
-
     const mapKey = document.getElementById('map-key')
     mapKey.innerHTML = ''
     for (const text in assessments) {
@@ -132,7 +117,7 @@ class App extends Events {
           click: (e) => this.showTree(e)
         })
       }
-    }).addTo(map)
+    }).addTo(map.map)
   }
 
   showTree (e) {
@@ -142,7 +127,7 @@ class App extends Events {
       currentLayer.setStyle({ fillOpacity: 0 })
     }
     if (currentOsm) {
-      currentOsm.forEach(l => l.removeFrom(map))
+      currentOsm.forEach(l => l.removeFrom(map.map))
     }
 
     e.target.setStyle({ fillOpacity: 1 })
@@ -205,7 +190,7 @@ class App extends Events {
               p[k] = osmFeature.properties[k]
             }
           }
-          layer.addTo(map)
+          layer.addTo(map.map)
 
           const div = document.createElement('div')
           div.innerHTML = '<a target="_blank" href="https://openstreetmap.org/' + osmFeature.properties['@id'] + '">' + osmFeature.properties['@id'] + '</a>'
@@ -219,7 +204,7 @@ class App extends Events {
 
           return div
         })
-        layer.addTo(map)
+        layer.addTo(map.map)
         osmFeature.layer = layer
         return layer
       }
