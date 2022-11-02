@@ -2,7 +2,17 @@ const fields = [
   {
     title: 'ID',
     kat: 'BAUM_ID',
-    osm: '@id'
+    osm: (tags) => {
+      const a = document.createElement('a')
+      a.target = '_blank'
+      a.href = 'https://openstreetmap.org/' + tags['@id']
+      a.innerHTML = tags['@id']
+      return a
+    }
+  },
+  {
+    title: 'Distance',
+    osm: (tags) => tags['@distance'].toFixed(2) + 'm'
   },
   {
     title: 'Number',
@@ -59,6 +69,22 @@ export class PropertiesCmp {
     this.table = document.createElement('table')
     this.table.className = 'properties-cmp'
 
+    const tr = document.createElement('tr')
+
+    const th = document.createElement('th')
+    tr.appendChild(th)
+
+    const thKat = document.createElement('th')
+    thKat.className = 'kat'
+    thKat.innerHTML = 'Baumkataster'
+    tr.appendChild(thKat)
+
+    const thOsm = document.createElement('th')
+    thOsm.className = 'osm'
+    tr.appendChild(thOsm)
+
+    this.table.appendChild(tr)
+
     fields.forEach(f => {
       const tr = document.createElement('tr')
 
@@ -80,12 +106,22 @@ export class PropertiesCmp {
     return this.table
   }
 
+  setHeader (title, column) {
+    if (typeof title === 'string') {
+      title = document.createTextNode(title)
+    }
+
+    const index = [ null, 'kat', 'osm' ].indexOf(column)
+    const th = this.table.rows[0].cells[index]
+
+    th.appendChild(title)
+  }
+
   show (properties, column) {
     const index = [ null, 'kat', 'osm' ].indexOf(column)
-    console.log(column, index)
 
     fields.forEach((f, i) => {
-      const td = this.table.rows[i].cells[index]
+      const td = this.table.rows[i + 1].cells[index]
       if (!(column in f)) {
         return
       }
