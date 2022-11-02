@@ -38,6 +38,7 @@ class App extends Events {
           if (err) { return global.alert(err) }
           this.map = map.map
           this.show()
+          this.assessAll()
         }
       )
     })
@@ -73,10 +74,25 @@ class App extends Events {
 
   show () {
     document.getElementById('details').innerHTML = ''
-    data.features.forEach(feature => {
+    this.trees = data.features.map(feature => {
       const tree = new Tree(feature)
       tree.show()
+      return tree
     })
+  }
+
+  assessAll () {
+    const log = new StatusMessage('Assessing trees ... 0%')
+    async.eachOfLimit(this.trees, this.config.assessParallel,
+      (tree, i, done) => {
+        tree.assess(done)
+        log.change('Assessing trees ... ' + (i * 100 / data.features.length).toFixed(0) + '%')
+      },
+      (err) => {
+        if (err) { console.error(err) }
+        log.change('Assessing trees ... done')
+      }
+    )
   }
 }
 
