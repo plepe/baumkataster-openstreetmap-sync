@@ -24,7 +24,24 @@ export function showTree (_app, feature, layer) {
     features: feature.properties.osmTrees
   }
 
+  document.body.className = 'details'
   const details = document.getElementById('details')
+  details.innerHTML = ''
+
+  const closeButton = document.createElement('div')
+  closeButton.className = 'closeButton'
+  closeButton.innerHTML = '⏴ back'
+  closeButton.onclick = () => {
+    document.body.className = 'main'
+
+    clearOsm()
+    if (currentLayer) {
+      currentLayer.setStyle({ fillOpacity: 0 })
+      currentLayer = null
+    }
+  }
+  details.appendChild(closeButton)
+
   const p = {}
   for (const k in feature.properties) {
     if (!['assessment', 'osmTrees', 'SE_ANNO_CAD_DATA'].includes(k)) {
@@ -35,7 +52,6 @@ export function showTree (_app, feature, layer) {
   delete p.assessment
   delete p.osmTrees
 
-  details.innerHTML = ''
   details.appendChild(document.createTextNode(feature.properties.assessment))
 
   table = new PropertiesCmp()
