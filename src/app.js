@@ -4,13 +4,14 @@ import Events from 'events'
 
 import josm from './josm'
 import { map } from './map'
-import { showTree } from './showTree'
+import { Tree } from './Tree'
 import { StatusMessage } from './status'
 import assessments from './assessments.json'
 
 const modules = [
   josm,
-  map
+  map,
+  Tree
 ]
 
 let data
@@ -31,6 +32,7 @@ class App extends Events {
         (err) => {
           if (err) { return global.alert(err) }
           this.initMapKey()
+          this.map = map.map
           this.show()
         }
       )
@@ -91,21 +93,10 @@ class App extends Events {
 
   show () {
     document.getElementById('details').innerHTML = ''
-    L.geoJSON(data, {
-      pointToLayer: (feature, latlng) => {
-        const options = JSON.parse(JSON.stringify(this.config.treeMarker))
-        if (feature.properties.assessment in assessments) {
-          options.color = assessments[feature.properties.assessment]
-        }
-
-        return L.circleMarker(latlng, options)
-      },
-      onEachFeature: (feature, layer) => {
-        layer.on({
-          click: (e) => showTree(this, e.target.feature, e.target)
-        })
-      }
-    }).addTo(map.map)
+    data.features.forEach(feature => {
+      const tree = new Tree(feature)
+      tree.show()
+    })
   }
 }
 
