@@ -27,3 +27,11 @@ pre {
   max-height: 5em;
   overflow: scroll;
 }
+
+.properties-cmp {
+  border-collapse: collapse;
+}
+.properties-cmp th,
+.properties-cmp td {
+  border: 1px solid black;
+}

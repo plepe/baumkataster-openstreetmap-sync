@@ -1,6 +1,7 @@
 import distance from '@turf/distance'
 
 import { map } from './map'
+import { PropertiesCmp } from './PropertiesCmp'
 
 let currentLayer
 let currentOsm
@@ -62,6 +63,15 @@ export function showTree (app, feature, layer) {
     ul.appendChild(li)
   })
   details.appendChild(ul)
+
+  const table = new PropertiesCmp()
+  details.appendChild(table.init())
+
+  table.show(feature.properties, 'kat')
+
+  if (osmFeatures.features.length) {
+    table.show(osmFeatures.features[0].properties, 'osm')
+  }
 
   currentOsm = osmFeatures.features.map(
     osmFeature => {
