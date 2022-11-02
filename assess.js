@@ -6,6 +6,12 @@ import { convertKataster2OSM } from './src/convertKataster2OSM.js'
 
 const config = JSON.parse(fs.readFileSync('conf.json'))
 
+const app = {
+  config
+}
+const modules = [
+]
+
 let overpassFrontend
 let data
 
@@ -34,7 +40,15 @@ function loadBK (callback) {
 
 async.parallel([
   loadOSM,
-  loadBK
+  loadBK,
+  done => async.each(
+    modules,
+    (module, done) => module.init(app, done),
+    (err) => {
+      if (err) { return global.alert(err) }
+      done(err)
+    }
+  )
 ], (err) => {
   if (err) { return }
 
