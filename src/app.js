@@ -83,10 +83,14 @@ class App extends Events {
 
   assessAll () {
     const log = new StatusMessage('Assessing trees ... 0%')
-    async.eachOfLimit(this.trees, this.config.assessParallel,
-      (tree, i, done) => {
-        tree.assess(done)
-        log.change('Assessing trees ... ' + (i * 100 / data.features.length).toFixed(0) + '%')
+    let count = 0
+    async.each(this.trees,
+      (tree, done) => {
+        tree.assess((err) => {
+          count++
+          log.change('Assessing trees ... ' + (count * 100 / data.features.length).toFixed(0) + '%')
+          done(err)
+        })
       },
       (err) => {
         if (err) { console.error(err) }
