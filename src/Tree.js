@@ -25,11 +25,9 @@ export class Tree {
     this.layer.addTo(app.map)
     this.layer.on({
       click: (e) => {
-        this.assess(() => {
-          this.feature.properties.osmTrees = this.osmTrees // TODO: remove
-          this.feature.properties.assessment = this.assessment // TODO: remove
-          showTree(app, this.feature, this.layer)
-        })
+        this.feature.properties.osmTrees = this.osmTrees // TODO: remove
+        this.feature.properties.assessment = this.assessment // TODO: remove
+        showTree(app, this.feature, this.layer)
       }
     })
   }

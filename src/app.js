@@ -9,6 +9,7 @@ import { mapKey } from './mapKey'
 import { assessTree } from './assessTree'
 import { StatusMessage } from './status'
 import { overpassFrontend } from './overpassFrontend'
+import { baumkataster } from './baumkataster'
 
 const modules = [
   josm,
@@ -16,15 +17,16 @@ const modules = [
   mapKey,
   assessTree,
   overpassFrontend,
-  Tree
+  Tree,
+  baumkataster
 ]
 
-let data
 let app
 
 class App extends Events {
   constructor () {
     super()
+    this.trees = {}
   }
 
   init () {
@@ -36,8 +38,7 @@ class App extends Events {
         (module, done) => module.init(this, done),
         (err) => {
           if (err) { return global.alert(err) }
-          this.show()
-          this.assessAll()
+          this.updateMap()
         }
       )
     })
@@ -52,16 +53,6 @@ class App extends Events {
             this.config = body
             done()
           }),
-      (done) => {
-        const log = new StatusMessage('Loading baumkataster ...')
-        fetch('data/result.geojson')
-          .then(req => req.json())
-          .then(body => {
-            data = body
-            log.change('Loading baumkataster ... done')
-            done()
-          })
-      }
     ], (err) => {
       if (err) {
         global.alert(err)
@@ -71,23 +62,42 @@ class App extends Events {
     })
   }
 
-  show () {
-    document.getElementById('details').innerHTML = ''
-    this.trees = data.features.map(feature => {
-      const tree = new Tree(feature)
-      tree.show()
-      return tree
+  updateMap () {
+    let bbox = app.map.getBounds()
+    bbox = [bbox.getSouth(), bbox.getWest(), bbox.getNorth(), bbox.getEast()]
+
+    baumkataster.get(bbox, (err, features) => {
+      if (err) { return global.alert(err) }
+
+      const list = features.map(feature => {
+        const id = feature.id
+        if (!(id in this.trees)) {
+          this.trees[id] = new Tree(feature)
+        }
+
+        return this.trees[id]
+      })
+
+      this.show(list)
+      this.assessAll(list)
     })
   }
 
-  assessAll () {
+  show (list) {
+    document.getElementById('details').innerHTML = ''
+    list.forEach(tree => {
+      tree.show()
+    })
+  }
+
+  assessAll (list) {
     const log = new StatusMessage('Assessing trees ... 0%')
     let count = 0
-    async.each(this.trees,
+    async.each(list,
       (tree, done) => {
         tree.assess((err) => {
           count++
-          log.change('Assessing trees ... ' + (count * 100 / data.features.length).toFixed(0) + '%')
+          log.change('Assessing trees ... ' + (count * 100 / list.length).toFixed(0) + '%')
           done(err)
         })
       },
