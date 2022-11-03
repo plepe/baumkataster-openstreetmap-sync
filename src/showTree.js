@@ -1,6 +1,5 @@
 import distance from '@turf/distance'
 
-import { map } from './map'
 import { PropertiesCmp } from './PropertiesCmp'
 
 let currentLayer
@@ -102,7 +101,7 @@ function highlightOsm (katFeature, osmFeature) {
         p[k] = osmFeature.properties[k]
       }
     }
-    layer.addTo(map.map)
+    layer.addTo(app.map)
 
     const div = document.createElement('div')
     div.innerHTML = '<a target="_blank" href="https://openstreetmap.org/' + osmFeature.properties['@id'] + '">' + osmFeature.properties['@id'] + '</a>'
@@ -110,7 +109,7 @@ function highlightOsm (katFeature, osmFeature) {
 
     return div
   })
-  layer.addTo(map.map)
+  layer.addTo(app.map)
   osmFeature.layer = layer
 
   app.emit('tree-show', {
@@ -123,7 +122,7 @@ function highlightOsm (katFeature, osmFeature) {
 
 function clearOsm () {
   if (currentOsm) {
-    currentOsm.forEach(l => l.removeFrom(map.map))
+    currentOsm.forEach(l => l.removeFrom(app.map))
   }
   currentOsm = []
 

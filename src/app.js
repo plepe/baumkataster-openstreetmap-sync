@@ -36,7 +36,6 @@ class App extends Events {
         (module, done) => module.init(this, done),
         (err) => {
           if (err) { return global.alert(err) }
-          this.map = map.map
           this.show()
           this.assessAll()
         }
