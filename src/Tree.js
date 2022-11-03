@@ -1,3 +1,4 @@
+import OverpassFrontend from 'overpass-frontend'
 import { showTree } from './showTree'
 import assessments from './assessments.json'
 import { assessTree } from './assessTree.js'
@@ -44,7 +45,9 @@ export class Tree {
     app.overpassFrontend.BBoxQuery(
       query,
       null,
-      {},
+      {
+        properties: OverpassFrontend.TAGS | OverpassFrontend.GEOM
+      },
       (err, osmTree) => {
         if (err) { return console.error(err) }
         osmTrees.push(osmTree.GeoJSON())
