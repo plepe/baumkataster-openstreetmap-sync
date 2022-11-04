@@ -78,10 +78,6 @@ export class Tree {
         this.show()
       }
 
-//        .map(t => t.GeoJSON())
-//        .sort((a, b) => distance(katTree, a) - distance(katTree, b))
-//      console.log(katTree.properties.OBJECTID + ': ' + result.text)
-
       callback(null, result)
     })
   }

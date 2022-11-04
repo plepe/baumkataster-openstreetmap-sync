@@ -1,8 +1,13 @@
+import distance from '@turf/distance'
+
 import { convertKataster2OSM } from './convertKataster2OSM.js'
 
 let app
 
 export function assessTree (katTree, osmTrees) {
+  osmTrees = osmTrees
+    .sort((a, b) => distance(katTree, a) - distance(katTree, b))
+
   const matchingTrees = osmTrees.filter(osmTree => {
     return osmTree.properties['tree:ref'] === katTree.properties.BAUMNUMMER
   })
