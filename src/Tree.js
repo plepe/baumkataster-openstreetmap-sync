@@ -69,16 +69,18 @@ export class Tree {
     this.loadNearbyOSMTrees((err, nearbyTrees) => {
       if (err) { return callback(err) }
 
-      const result = assessTree(this.feature, nearbyTrees)
+      assessTree(this.feature, nearbyTrees, (err, result) => {
+        if (err) { return callback(err) }
 
-      this.assessment = result.text
-      this.osmTrees = result.trees
+        this.assessment = result.text
+        this.osmTrees = result.trees
 
-      if (this.layer) {
-        this.show()
-      }
+        if (this.layer) {
+          this.show()
+        }
 
-      callback(null, result)
+        callback(null, result)
+      })
     })
   }
 }

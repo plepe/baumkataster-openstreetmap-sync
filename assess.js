@@ -80,13 +80,15 @@ function assess () {
       function (err) {
         if (err) { callback(err) }
 
-        const result = assessTree(katTree, osmTrees)
+        assessTree(katTree, osmTrees, (err, result) => {
+          if (err) { return callback(err) }
 
-        katTree.properties.assessment = result.text
-        katTree.properties.osmTrees = result.trees
-        console.log(katTree.properties.OBJECTID + ': ' + result.text)
+          katTree.properties.assessment = result.text
+          katTree.properties.osmTrees = result.trees
+          console.log(katTree.properties.OBJECTID + ': ' + result.text)
 
-        callback(null, katTree)
+          callback(null, katTree)
+        })
       }
     )
   },

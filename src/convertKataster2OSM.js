@@ -143,7 +143,7 @@ function mightBeShrub (tags) {
   return false
 }
 
-export function convertKataster2OSM (properties) {
+export function convertKataster2OSM (properties, callback) {
   const tags = {
     denotation: 'urban',
     source: 'OGD Vienna',
@@ -196,5 +196,5 @@ export function convertKataster2OSM (properties) {
     tags.fixme = 'Baum oder Strauch'
   }
 
-  return tags
+  callback(null, tags)
 }
