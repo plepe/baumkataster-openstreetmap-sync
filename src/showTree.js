@@ -66,7 +66,7 @@ export function showTree (_app, feature, layer) {
   select.onchange = () => {
     highlightOsm(feature, osmFeatures.features[select.value])
   }
-  if (osmFeatures.features.length) {
+  if (osmFeatures && osmFeatures.features.length) {
     osmFeatures.features.forEach((osmFeature, i) => {
       const _distance = distance(feature, osmFeature, { unit: 'kilometers' }) * 1000
       osmFeature.properties['@distance'] = _distance
