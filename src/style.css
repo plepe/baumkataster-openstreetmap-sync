@@ -40,6 +40,9 @@ pre {
   height: 5em;
   overflow: scroll;
 }
+#actions > div {
+  cursor: pointer;
+}
 
 .properties-cmp {
   border-collapse: collapse;
