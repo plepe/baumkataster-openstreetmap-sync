@@ -1,7 +1,10 @@
+import async from 'async'
 import OverpassFrontend from 'overpass-frontend'
+
 import { showTree } from './showTree'
 import assessments from './assessments.json'
 import { assessTree } from './assessTree.js'
+import { speciesWikidata } from './speciesWikidata.js'
 
 let app
 
@@ -66,22 +69,37 @@ export class Tree {
       })
     }
 
-    this.loadNearbyOSMTrees((err, nearbyTrees) => {
-      if (err) { return callback(err) }
+    let result
+    async.parallel([
+      done => this.loadNearbyOSMTrees((err, nearbyTrees) => {
+        if (err) { return done(err) }
 
-      assessTree(this.feature, nearbyTrees, (err, result) => {
-        if (err) { return callback(err) }
+        assessTree(this.feature, nearbyTrees, (err, _result) => {
+          result = _result
+          if (err) { return done(err) }
 
-        this.assessment = result.text
-        this.osmTrees = result.trees
+          this.assessment = result.text
+          this.osmTrees = result.trees
 
-        if (this.layer) {
-          this.show()
+          if (this.layer) {
+            this.show()
+          }
+
+          done()
+        })
+      }),
+      done => {
+        const m = this.feature.properties.GATTUNG_ART.match(/^([^'\(]*)/)
+        if (m) {
+          speciesWikidata(m[1].trim(), (err, value) => {
+            this.feature.properties['species:wikidata'] = value
+            done()
+          })
+        } else {
+          done()
         }
-
-        callback(null, result)
-      })
-    })
+      }
+    ], (err) => callback(err, result))
   }
 }
 
