@@ -12,12 +12,15 @@ export const overpassFrontend = {
     app = _app
     app.overpassFrontend = new OverpassFrontend(app.config.overpassUrl || 'https://www.overpass-api.de/api/interpreter')
     callback()
+    this.loadCache(app.config.bbox, () => {})
+  },
 
+  loadCache (boundingbox, callback) {
     let count = 0
     const log = new StatusMessage('initialize OSM cache ... 0 trees found')
 
     // add a buffer around the bounding box with the size of the searchDistance
-    let bounds = bboxPolygon([app.config.bbox[1], app.config.bbox[0], app.config.bbox[3], app.config.bbox[2]])
+    let bounds = bboxPolygon([boundingbox[1], boundingbox[0], boundingbox[3], boundingbox[2]])
     bounds = buffer(bounds, app.config.searchDistance / 1000, { units: 'kilometers' })
     bounds = bbox(bounds)
 
@@ -40,7 +43,9 @@ export const overpassFrontend = {
       },
       (err) => {
         if (err) { console.error(err) }
+        console.log(count)
         log.change('initialized OSM cache ... ' + count + ' trees found')
+        callback(null)
       }
     )
   }
