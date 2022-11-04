@@ -68,6 +68,12 @@ class App extends Events {
   }
 
   updateMap () {
+    if (this.map.getZoom() < 17) {
+      document.getElementById('zoom-in-warning').classList.remove('hide')
+      return
+    }
+    document.getElementById('zoom-in-warning').classList.add('hide')
+
     let bbox = app.map.getBounds()
     bbox = [bbox.getSouth(), bbox.getWest(), bbox.getNorth(), bbox.getEast()]
 
