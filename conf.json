@@ -2,6 +2,7 @@
   "bbox": [ 48.16821, 16.31701, 48.17324, 16.32580 ],
   "overpassUrl": "https://www.overpass-api.de/api/interpreter",
   "bboxBuffer": 0.0002,
+  "gridSize": [ 0.01, 0.01 ],
   "searchDistance": 10,
   "assessParallel": 4,
   "lastImportYear": 2012,
