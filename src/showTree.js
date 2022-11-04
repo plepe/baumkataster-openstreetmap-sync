@@ -51,7 +51,7 @@ export function showTree (_app, feature, layer) {
   delete p.assessment
   delete p.osmTrees
 
-  details.appendChild(document.createTextNode(feature.properties.assessment))
+  details.appendChild(document.createTextNode(feature.properties.assessment || 'not assessed (yet)'))
 
   table = new PropertiesCmp()
   details.appendChild(table.init())
