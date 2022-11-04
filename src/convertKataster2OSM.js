@@ -172,10 +172,10 @@ export function convertKataster2OSM (properties) {
     tags.note = 'Jungbaum wird gepflanzt'
   } else if (properties.GATTUNG_ART === 'unbekannt') {
   } else {
-    const m = properties.GATTUNG_ART.match(/^([^ ]+) ([^']+) ('(.*)' )?\((.*)\)$/)
+    const m = properties.GATTUNG_ART.match(/^([^ ]+)(?: ([^']+))? ('(.*)' )?\((.*)\)$/)
     if (m) {
       tags.genus = m[1] in genusFix ? genusFix[m[1]] : m[1]
-      tags.taxon = tags.genus + ' ' + m[2]
+      tags.taxon = tags.genus + (m[2] ? ' ' + m[2] : '')
       tags['taxon:cultivar'] = ''
       tags.species = tags.taxon
       tags['species:de'] = m[5] in speciesDeFix ? speciesDeFix[m[5]] : m[5]
