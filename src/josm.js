@@ -53,9 +53,14 @@ function addActions ({katasterTree, osmTree}) {
   action.className = 'josm'
   action.innerHTML = 'Create new tree via JOSM remote control'
   action.onclick = () => {
-    const tags = convertKataster2OSM(katasterTree.properties)
-    let p = 'add_node?lon=' + katasterTree.geometry.coordinates[0] + '&lat=' + katasterTree.geometry.coordinates[1] + '&addtags=' + toAddTags(tags)
-    exec(p)
+    convertKataster2OSM(katasterTree.properties,
+      (err, tags) => {
+        if (err) { return global.alert(err) }
+
+        let p = 'add_node?lon=' + katasterTree.geometry.coordinates[0] + '&lat=' + katasterTree.geometry.coordinates[1] + '&addtags=' + toAddTags(tags)
+        exec(p)
+      }
+    )
   }
   actions.appendChild(action)
 }
