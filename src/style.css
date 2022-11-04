@@ -21,6 +21,12 @@ body.main > #main {
   flex-direction: column;
   justify-content: space-between;
 }
+#zoom-in-warning {
+  text-align: center;
+}
+#zoom-in-warning.hide {
+  display: none;
+}
 
 #map-key > div {
   display: flex;

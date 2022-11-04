@@ -37,9 +37,14 @@ function addActions ({katasterTree, osmTree}) {
     action.innerHTML = 'Update current tree via JOSM remote control'
     action.onclick = () => {
       const id = osmTree.properties['@id'].substr(0, 1) + osmTree.properties['@id'].split('/')[1]
-      const tags = convertKataster2OSM(katasterTree.properties)
-      let p = 'load_object?objects=' + id + '&addtags=' + toAddTags(tags)
-      exec(p)
+      convertKataster2OSM(katasterTree.properties,
+        (err, tags) => {
+          if (err) { return global.alert(err) }
+
+          let p = 'load_object?objects=' + id + '&addtags=' + toAddTags(tags)
+          exec(p)
+        }
+      )
     }
     actions.appendChild(action)
   }

@@ -1,3 +1,5 @@
+import { speciesWikidata } from './speciesWikidata.js'
+
 const genusFix = {
   'Eucommina': 'Eucommia',
   'Eleagnus': 'Elaeagnus'
@@ -143,7 +145,7 @@ function mightBeShrub (tags) {
   return false
 }
 
-export function convertKataster2OSM (properties) {
+export function convertKataster2OSM (properties, callback) {
   const tags = {
     denotation: 'urban',
     source: 'OGD Vienna',
@@ -172,10 +174,10 @@ export function convertKataster2OSM (properties) {
     tags.note = 'Jungbaum wird gepflanzt'
   } else if (properties.GATTUNG_ART === 'unbekannt') {
   } else {
-    const m = properties.GATTUNG_ART.match(/^([^ ]+) ([^']+) ('(.*)' )?\((.*)\)$/)
+    const m = properties.GATTUNG_ART.match(/^([^ ]+)(?: ([^']+))? ('(.*)' )?\((.*)\)$/)
     if (m) {
       tags.genus = m[1] in genusFix ? genusFix[m[1]] : m[1]
-      tags.taxon = tags.genus + ' ' + m[2]
+      tags.taxon = tags.genus + (m[2] ? ' ' + m[2] : '')
       tags['taxon:cultivar'] = ''
       tags.species = tags.taxon
       tags['species:de'] = m[5] in speciesDeFix ? speciesDeFix[m[5]] : m[5]
@@ -196,5 +198,15 @@ export function convertKataster2OSM (properties) {
     tags.fixme = 'Baum oder Strauch'
   }
 
-  return tags
+  if (tags.species) {
+    speciesWikidata(tags.species, (err, id) => {
+      if (id) {
+        tags['species:wikidata'] = id
+      }
+
+      callback(err, tags)
+    })
+  } else {
+    callback(null, tags)
+  }
 }
