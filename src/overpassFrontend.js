@@ -10,7 +10,9 @@ let app
 export const overpassFrontend = {
   init (_app, callback) {
     app = _app
-    app.overpassFrontend = new OverpassFrontend(app.config.overpassUrl || 'https://www.overpass-api.de/api/interpreter')
+    app.overpassFrontend = new OverpassFrontend(app.config.overpassUrl || 'https://www.overpass-api.de/api/interpreter', {
+      effortPerRequest: 10000
+    })
     callback()
   },
 
