@@ -38,6 +38,11 @@ class App extends Events {
         (module, done) => module.init(this, done),
         (err) => {
           if (err) { return global.alert(err) }
+          app.map.on({
+            moveend: (e) => {
+              this.updateMap()
+            }
+          })
           this.updateMap()
         }
       )
@@ -85,7 +90,6 @@ class App extends Events {
   }
 
   show (list) {
-    document.getElementById('details').innerHTML = ''
     list.forEach(tree => {
       tree.show()
     })
