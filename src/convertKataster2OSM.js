@@ -1,3 +1,5 @@
+import { speciesWikidata } from './speciesWikidata.js'
+
 const genusFix = {
   'Eucommina': 'Eucommia',
   'Eleagnus': 'Elaeagnus'
@@ -196,5 +198,15 @@ export function convertKataster2OSM (properties, callback) {
     tags.fixme = 'Baum oder Strauch'
   }
 
-  callback(null, tags)
+  if (tags.species) {
+    speciesWikidata(tags.species, (err, id) => {
+      if (id) {
+        tags['species:wikidata'] = id
+      }
+
+      callback(err, tags)
+    })
+  } else {
+    callback(null, tags)
+  }
 }
