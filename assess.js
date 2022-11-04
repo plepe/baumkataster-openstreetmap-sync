@@ -84,7 +84,6 @@ function assess () {
 
         katTree.properties.assessment = result.text
         katTree.properties.osmTrees = result.trees
-          .sort((a, b) => distance(katTree, a) - distance(katTree, b))
         console.log(katTree.properties.OBJECTID + ': ' + result.text)
 
         callback(null, katTree)
