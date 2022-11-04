@@ -2,6 +2,11 @@ const cache = {}
 const loadCache = {}
 
 export function speciesWikidata (species, callback) {
+  const m = species.match(/^(.*) x (.*)$/)
+  if (m) {
+    species = m[1] + ' ×' + m[2]
+  }
+
   if (species in cache) {
     return callback(null, cache[species])
   }
