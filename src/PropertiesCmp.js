@@ -83,10 +83,28 @@ const fields = [
     kat: 'OBJEKT_STRASSE'
   },
   {
+    title: 'Species Wikidata',
+    kat: (tags) => formatWikidata(tags, 'species:wikidata'),
+    osm: (tags) => formatWikidata(tags, 'species:wikidata')
+  },
+  {
     title: 'fixme',
     osm: 'fixme'
   }
 ]
+
+function formatWikidata (tags, key) {
+  if (!(key in tags)) {
+    return ''
+  }
+
+  const a = document.createElement('a')
+  a.target = '_blank'
+  a.href = 'https://wikidata.org/wiki/' + tags[key]
+  a.innerHTML = tags[key]
+  return a
+}
+
 
 export class PropertiesCmp {
   constructor (app) {
