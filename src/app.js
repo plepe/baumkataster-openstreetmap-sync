@@ -66,6 +66,7 @@ class App extends Events {
     let bbox = app.map.getBounds()
     bbox = [bbox.getSouth(), bbox.getWest(), bbox.getNorth(), bbox.getEast()]
 
+    overpassFrontend.loadCache(bbox, () => {})
     baumkataster.get(bbox, (err, features) => {
       if (err) { return global.alert(err) }
 

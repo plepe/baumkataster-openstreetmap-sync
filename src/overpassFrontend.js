@@ -12,7 +12,6 @@ export const overpassFrontend = {
     app = _app
     app.overpassFrontend = new OverpassFrontend(app.config.overpassUrl || 'https://www.overpass-api.de/api/interpreter')
     callback()
-    this.loadCache(app.config.bbox, () => {})
   },
 
   loadCache (boundingbox, callback) {
