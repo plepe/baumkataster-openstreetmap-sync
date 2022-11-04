@@ -10,8 +10,7 @@ cd baumkataster-openstreetmap-sync
 # You might want to edit conf.json to modify bounding box
 mkdir data dist # Create directory for the data
 npm install # Install dependencies
-npm run download-all # Download Baumkataster and OpenStreetMap data
-npm run assess # Assess all baumkataster trees in bounding box
+npm run download-all # Download Baumkataster data
 npm start # Start the web server to show baumkataster trees
 ```
 

@@ -7,7 +7,7 @@
     "build": "browserify src/app.js -p esmify -o dist/app.js",
     "download-baumkataster": "node download-baumkataster.js",
     "download-openstreetmap": "node download-openstreetmap.js",
-    "download-all": "npm-run-all -p download-baumkataster download-openstreetmap",
+    "download-all": "npm-run-all -p download-baumkataster",
     "assess": "node assess.js",
     "lint": "standard --fix *.js src/*.js",
     "prepare": "npm-run-all build",
