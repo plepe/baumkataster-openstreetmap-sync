@@ -13,9 +13,10 @@ export function assessTree (katTree, osmTrees) {
   })
 
   if (matchingTrees.length > 1) {
+    const matchingTreeIds = matchingTrees.map(t => t.id)
     return {
       text: 'several trees with same BAUMNUMMER found',
-      trees: matchingTrees
+      trees: matchingTrees.concat(osmTrees.filter(t => !matchingTreeIds.includes(t.id)))
     }
   }
 
@@ -25,9 +26,10 @@ export function assessTree (katTree, osmTrees) {
     })
 
     if (matchingTreesWithoutNR.length) {
+      const matchingTreeIds = matchingTreesWithoutNR.map(t => t.id)
       return {
         text: 'trees without NUMMER found',
-        trees: matchingTreesWithoutNR
+        trees: matchingTreesWithoutNR.concat(osmTrees.filter(t => !matchingTreeIds.includes(t.id)))
       }
     }
 
@@ -46,26 +48,28 @@ export function assessTree (katTree, osmTrees) {
 
   const osmTree = matchingTrees[0]
   const convertedTags = convertKataster2OSM(katTree.properties)
+  const matchingTreeIds = matchingTrees.map(t => t.id)
+  const trees = matchingTrees.concat(osmTrees.filter(t => !matchingTreeIds.includes(t.id)))
 
   if (parseInt(osmTree.properties.start_date) !== katTree.properties.PFLANZJAHR) {
     if (katTree.properties.PFLANZJAHR >= app.config.lastImportYear) {
       return {
         text: 'tree found, replaced',
-        trees: [osmTree]
+        trees
       }
     }
 
     if (katTree.properties.GATTUNG_ART === 'Jungbaum wird gepflanzt') {
       return {
         text: 'tree found, being replaced',
-        trees: [osmTree]
+        trees
       }
     }
 
     if (katTree.properties.PFLANZJAHR !== 0 || 'start_date' in osmTree.properties) {
       return {
         text: 'tree found, but different start_date',
-        trees: [osmTree]
+        trees
       }
     }
   }
@@ -73,7 +77,7 @@ export function assessTree (katTree, osmTrees) {
   if (osmTree.properties.species !== convertedTags.species) {
     return {
       text: 'tree found, species different',
-      trees: [osmTree]
+      trees
     }
   }
 
@@ -82,13 +86,13 @@ export function assessTree (katTree, osmTrees) {
       osmTree.properties.height !== convertedTags.height) {
     return {
       text: 'tree found, changed values',
-      trees: [osmTree]
+      trees
     }
   }
 
   return {
     text: 'tree found',
-    trees: [osmTree]
+    trees
   }
 }
 
