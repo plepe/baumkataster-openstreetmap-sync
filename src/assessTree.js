@@ -59,6 +59,13 @@ export function assessTree (katTree, osmTrees, callback) {
     }
 
     if (katTree.properties.GATTUNG_ART === 'Jungbaum wird gepflanzt') {
+      if (osmTree.properties.species === 'none') {
+        return callback(null, {
+          text: 'tree found',
+          trees
+        })
+      }
+
       return callback(null, {
         text: 'tree found, being replaced',
         trees

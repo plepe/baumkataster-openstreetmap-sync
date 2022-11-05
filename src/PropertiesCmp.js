@@ -25,12 +25,24 @@ const fields = [
     kat: 'GATTUNG_ART',
     osm: (tags) =>
       (tags.species || '') + ('taxon:cultivar' in tags ? " '" + tags['taxon:cultivar'] + "'" : '') +
-      ('species:de' in tags ? ' (' + tags['species:de'] + ')' : '')
+      ('species:de' in tags ? ' (' + tags['species:de'] + ')' : ''),
+    compare: (kat, osm) => {
+      if (kat.GATTUNG_ART === 'Jungbaum wird gepflanzt') {
+        return osm.species === 'none'
+      }
+
+      const osmGATT = (osm.species || '') + ('taxon:cultivar' in osm ? " '" + osm['taxon:cultivar'] + "'" : '') +
+      ('species:de' in osm ? ' (' + osm['species:de'] + ')' : '')
+      return osmGATT === kat.GATTUNG_ART
+    }
   },
   {
     title: 'Year of plantation',
     kat: 'PFLANZJAHR_TXT',
-    osm: 'start_date'
+    osm: 'start_date',
+    compare: (kat, osm) =>
+      (kat.PFLANZJAHR === 0 && !('start_date' in osm)) ||
+      (kat.PFLANZJAHR.toString() === osm.start_date)
   },
   {
     title: 'Height',
@@ -71,7 +83,7 @@ const fields = [
     kat: 'STAMMUMFANG_TXT',
     osm: 'circumference',
     compare: (kat, osm) => {
-      return Math.abs(kat.STAMMUMFANG / 100 - parseFloat(osm.circumference)) < 0.01
+      return kat.STAMMUMFANG === 0 ? !('circumference' in osm) : Math.abs(kat.STAMMUMFANG / 100 - parseFloat(osm.circumference)) < 0.01
     }
   },
   {
