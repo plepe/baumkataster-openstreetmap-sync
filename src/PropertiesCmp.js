@@ -1,13 +1,13 @@
 export class PropertiesCmp {
   constructor (fields) {
     this.fields = fields
+    this.hasHeaderRow = 0
   }
 
-  init () {
-    this.table = document.createElement('table')
-    this.table.className = 'properties-cmp'
-
+  addHeaderRow () {
     const tr = document.createElement('tr')
+
+    this.table.insertBefore(tr, this.table.rows[0])
 
     const th = document.createElement('th')
     tr.appendChild(th)
@@ -20,7 +20,12 @@ export class PropertiesCmp {
     thOsm.className = 'osm'
     tr.appendChild(thOsm)
 
-    this.table.appendChild(tr)
+    this.hasHeaderRow = 1
+  }
+
+  init () {
+    this.table = document.createElement('table')
+    this.table.className = 'properties-cmp'
 
     this.fields.forEach(f => {
       const tr = document.createElement('tr')
@@ -45,6 +50,10 @@ export class PropertiesCmp {
   }
 
   setHeader (title, column) {
+    if (!this.hasHeaderRow) {
+      this.addHeaderRow()
+    }
+
     if (typeof title === 'string') {
       title = document.createTextNode(title)
     }
@@ -59,7 +68,7 @@ export class PropertiesCmp {
     const index = [ null, 'kat', 'osm' ].indexOf(column)
 
     this.fields.forEach((f, i) => {
-      const td = this.table.rows[i + 1].cells[index]
+      const td = this.table.rows[i + this.hasHeaderRow].cells[index]
       if (!(column in f)) {
         return
       }
@@ -95,7 +104,7 @@ export class PropertiesCmp {
 
   compare (kat, osm) {
     this.fields.forEach((f, i) => {
-      const tr = this.table.rows[i + 1]
+      const tr = this.table.rows[i + this.hasHeaderRow]
       let result = null
       if (!('compare' in f) && 'kat' in f && 'osm' in f) {
         result = this.getValue(kat, f.kat).textContent === this.getValue(osm, f.osm).textContent
