@@ -107,21 +107,6 @@ function highlightOsm (katFeature, osmFeature, convertedTags) {
 
   const layer = L.circleMarker([osmFeature.geometry.coordinates[1], osmFeature.geometry.coordinates[0]], app.config.osmMarker)
   currentOsm.push(layer)
-  layer.bindPopup(function () {
-    const p = {}
-    for (const k in osmFeature.properties) {
-      if (!k.match(/^@/)) {
-        p[k] = osmFeature.properties[k]
-      }
-    }
-    layer.addTo(app.map)
-
-    const div = document.createElement('div')
-    div.innerHTML = '<a target="_blank" href="https://openstreetmap.org/' + osmFeature.properties['@id'] + '">' + osmFeature.properties['@id'] + '</a>'
-    div.appendChild(showTags(p))
-
-    return div
-  })
   layer.addTo(app.map)
   osmFeature.layer = layer
 
