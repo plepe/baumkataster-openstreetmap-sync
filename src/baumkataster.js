@@ -20,13 +20,25 @@ export const baumkataster = {
         }
 
         fetch('data/baumkataster-tiles/' + tileId + '.geojson')
-          .then(req => req.json())
+          .then(req => {
+            if (req.ok) {
+              return req.json()
+            }
+
+            console.log(req)
+            new StatusMessage('Error loading file ' + tileId + '.geojson: ' + req.statusText)
+            doneY()
+          })
           .then(body => {
             log.change('Loading baumkataster ... done')
             if (body) {
               cache[tileId] = body.features
             }
             doneY(null, cache[tileId])
+          })
+          .catch(error => {
+            console.log(error)
+            doneY(error)
           })
       },
       (err, list) => {
