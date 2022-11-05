@@ -32,7 +32,7 @@
     "async": "^3.2.4",
     "leaflet": "^1.9.2",
     "node-fetch": "^3.2.10",
-    "overpass-frontend": "^3.0.1"
+    "overpass-frontend": "^3.0.2"
   },
   "devDependencies": {
     "browserify": "^17.0.0",
