@@ -45,6 +45,7 @@ pre {
 }
 
 .properties-cmp {
+  width: 100%;
   border-collapse: collapse;
 }
 .properties-cmp tr.correct {
@@ -57,9 +58,12 @@ pre {
 .properties-cmp td {
   border: 1px solid black;
 }
+.properties-cmp th.property {
+  width: 40%;
+}
 .properties-cmp td.osm,
 .properties-cmp td.kat {
-  width: 50%;
+  width: 30%;
 }
 .closeButton {
   font-size: 16pt;

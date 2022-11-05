@@ -5,10 +5,10 @@ import { baumkatasterWien } from '../dataset/baumkataster-wien'
 
 let currentLayer
 let currentOsm
-let table
+let tableInfo, tableProp, tableOSM
 let app
 
-export function showTree (_app, feature, layer) {
+export function showTree (_app, feature, layer, convertedTags) {
   app = _app
 
   clearOsm()
@@ -52,12 +52,21 @@ export function showTree (_app, feature, layer) {
   delete p.assessment
   delete p.osmTrees
 
-  details.appendChild(document.createTextNode(feature.properties.assessment || 'not assessed (yet)'))
+  details.appendChild(document.createTextNode('Assessment: ' + feature.properties.assessment || 'not assessed (yet)'))
 
-  table = new PropertiesCmp(baumkatasterWien.showFields)
-  details.appendChild(table.init())
+  tableInfo = new PropertiesCmp(baumkatasterWien.infoFields)
+  tableProp = new PropertiesCmp(baumkatasterWien.propFields)
+  tableOSM = new PropertiesCmp(baumkatasterWien.osmFields)
+  details.appendChild(tableInfo.init())
+  details.appendChild(document.createTextNode('Properties:'))
+  details.appendChild(tableProp.init())
+  details.appendChild(document.createTextNode('Further OSM properties:'))
+  details.appendChild(tableOSM.init())
 
-  table.show(feature.properties, 'kat')
+  tableInfo.setHeader('Baumkataster', 'kat')
+  tableInfo.show(feature.properties, 'kat')
+  tableProp.show(feature.properties, 'kat')
+  tableOSM.show(convertedTags, 'kat')
 
   app.emit('tree-show', {
     katasterTree: feature
@@ -82,14 +91,17 @@ export function showTree (_app, feature, layer) {
     span.innerHTML = 'Possible OSM:<br>'
     span.appendChild(select)
 
-    table.setHeader(span, 'osm')
-    highlightOsm(feature, osmFeatures.features[0])
+    tableInfo.setHeader(span, 'osm')
+    highlightOsm(feature, osmFeatures.features[0], convertedTags)
   }
 }
 
-function highlightOsm (katFeature, osmFeature) {
-  table.show(osmFeature.properties, 'osm')
-  table.compare(katFeature.properties, osmFeature.properties)
+function highlightOsm (katFeature, osmFeature, convertedTags) {
+  tableInfo.show(osmFeature.properties, 'osm')
+  tableProp.show(osmFeature.properties, 'osm')
+  tableOSM.show(osmFeature.properties, 'osm')
+  tableProp.compare(katFeature.properties, osmFeature.properties)
+  tableOSM.compare(convertedTags, osmFeature.properties)
 
   clearOsm()
 

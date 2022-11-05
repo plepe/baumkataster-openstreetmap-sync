@@ -1,7 +1,7 @@
 import { formatWikidata } from '../src/formatWikidata.js'
 
 export const baumkatasterWien = {
-  showFields: [
+  infoFields: [
     {
       title: 'ID',
       kat: 'BAUM_ID',
@@ -18,6 +18,16 @@ export const baumkatasterWien = {
       title: 'Distance',
       osm: (tags) => tags['@distance'].toFixed(2) + 'm'
     },
+    {
+      title: 'District',
+      kat: 'BEZIRK'
+    },
+    {
+      title: 'Road / Object',
+      kat: 'OBJEKT_STRASSE'
+    }
+  ],
+  propFields: [
     {
       title: 'Number',
       kat: 'BAUMNUMMER',
@@ -88,15 +98,9 @@ export const baumkatasterWien = {
       compare: (kat, osm) => {
         return kat.STAMMUMFANG === 0 ? !('circumference' in osm) : Math.abs(kat.STAMMUMFANG / 100 - parseFloat(osm.circumference)) < 0.01
       }
-    },
-    {
-      title: 'District',
-      kat: 'BEZIRK'
-    },
-    {
-      title: 'Road / Object',
-      kat: 'OBJEKT_STRASSE'
-    },
+    }
+  ],
+  osmFields: [
     {
       title: 'Species Wikidata',
       kat: (tags) => formatWikidata(tags, 'species:wikidata'),

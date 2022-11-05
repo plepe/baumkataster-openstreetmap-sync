@@ -5,6 +5,7 @@ import { showTree } from './showTree'
 import assessments from './assessments.json'
 import { assessTree } from './assessTree.js'
 import { speciesWikidata } from './speciesWikidata.js'
+import { convertKataster2OSM } from './convertKataster2OSM.js'
 
 let app
 
@@ -30,7 +31,10 @@ export class Tree {
       click: (e) => {
         this.feature.properties.osmTrees = this.osmTrees // TODO: remove
         this.feature.properties.assessment = this.assessment // TODO: remove
-        showTree(app, this.feature, this.layer)
+        convertKataster2OSM(this.feature.properties, (err, tags) => {
+          if (err) { return global.alert(err) }
+          showTree(app, this.feature, this.layer, tags)
+        })
       }
     })
   }
@@ -87,18 +91,7 @@ export class Tree {
 
           done()
         })
-      }),
-      done => {
-        const m = this.feature.properties.GATTUNG_ART.match(/^([^'\(]*)/)
-        if (m) {
-          speciesWikidata(m[1].trim(), (err, value) => {
-            this.feature.properties['species:wikidata'] = value
-            done()
-          })
-        } else {
-          done()
-        }
-      }
+      })
     ], (err) => callback(err, result))
   }
 }

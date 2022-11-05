@@ -14,7 +14,6 @@ export class PropertiesCmp {
 
     const thKat = document.createElement('th')
     thKat.className = 'kat'
-    thKat.innerHTML = 'Baumkataster'
     tr.appendChild(thKat)
 
     const thOsm = document.createElement('th')
@@ -27,6 +26,7 @@ export class PropertiesCmp {
       const tr = document.createElement('tr')
 
       const th = document.createElement('th')
+      th.className = 'property'
       th.innerHTML = f.title
       tr.appendChild(th)
 
