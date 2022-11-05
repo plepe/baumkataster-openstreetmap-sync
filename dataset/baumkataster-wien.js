@@ -108,7 +108,18 @@ export const baumkatasterWien = {
     },
     {
       title: 'fixme',
+      kat: 'fixme',
       osm: 'fixme'
+    },
+    {
+      title: 'denotation',
+      kat: 'denotation',
+      osm: 'denotation'
+    },
+    {
+      title: 'source',
+      kat: 'source',
+      osm: 'source'
     }
   ]
 }
