@@ -52,7 +52,7 @@ export function showTree (_app, feature, layer, convertedTags) {
   delete p.assessment
   delete p.osmTrees
 
-  details.appendChild(document.createTextNode('Assessment: ' + feature.properties.assessment || 'not assessed (yet)'))
+  details.appendChild(document.createTextNode('Assessment: ' + (feature.properties.assessment || 'not assessed (yet)')))
 
   tableInfo = new PropertiesCmp(baumkatasterWien.infoFields)
   tableProp = new PropertiesCmp(baumkatasterWien.propFields)
@@ -76,7 +76,7 @@ export function showTree (_app, feature, layer, convertedTags) {
   select.onchange = () => {
     highlightOsm(feature, osmFeatures.features[select.value])
   }
-  if (osmFeatures && osmFeatures.features.length) {
+  if (osmFeatures && osmFeatures.features && osmFeatures.features.length) {
     osmFeatures.features.forEach((osmFeature, i) => {
       const _distance = distance(feature, osmFeature, { unit: 'kilometers' }) * 1000
       osmFeature.properties['@distance'] = _distance
