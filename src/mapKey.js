@@ -1,4 +1,5 @@
 import assessments from './assessments.json'
+import treeMarker from './treeMarker.json'
 
 let app
 
@@ -19,7 +20,7 @@ function show (data) {
 
     const svg = document.createElement('span')
     svg.className = 'icon'
-    svg.innerHTML = '<svg width="25" height="25"><circle cx="13" cy="13" r="' + app.config.treeMarker.radius + '" style="stroke-width: ' + app.config.treeMarker.weight + 'px; stroke: ' + assessments[text] + '; fill: none;"></svg>'
+    svg.innerHTML = '<svg width="25" height="25"><circle cx="13" cy="13" r="' + treeMarker.radius + '" style="stroke-width: ' + treeMarker.weight + 'px; stroke: ' + assessments[text] + '; fill: none;"></svg>'
     div.appendChild(svg)
 
     let count = null

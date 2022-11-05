@@ -2,6 +2,7 @@ import distance from '@turf/distance'
 
 import { PropertiesCmp } from './PropertiesCmp'
 import { baumkatasterWien } from '../dataset/baumkataster-wien'
+import osmMarker from './osmMarker.json'
 
 let currentLayer
 let currentOsm
@@ -105,7 +106,7 @@ function highlightOsm (katFeature, osmFeature, convertedTags) {
 
   clearOsm()
 
-  const layer = L.circleMarker([osmFeature.geometry.coordinates[1], osmFeature.geometry.coordinates[0]], app.config.osmMarker)
+  const layer = L.circleMarker([osmFeature.geometry.coordinates[1], osmFeature.geometry.coordinates[0]], osmMarker)
   currentOsm.push(layer)
   layer.addTo(app.map)
   osmFeature.layer = layer

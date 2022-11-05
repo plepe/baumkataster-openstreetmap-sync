@@ -5,19 +5,5 @@
   "gridSize": [ 0.01, 0.01 ],
   "searchDistance": 10,
   "assessParallel": 4,
-  "lastImportYear": 2012,
-  "treeMarker": {
-    "radius": 5,
-    "color": "#000000",
-    "weight": 2,
-    "opacity": 1,
-    "fillOpacity": 0.0
-  },
-  "osmMarker": {
-    "radius": 4,
-    "color": "#ff00ff",
-    "weight": 0,
-    "fillOpacity": 1.0,
-    "interactive": false
-  }
+  "lastImportYear": 2012
 }

@@ -6,6 +6,7 @@ import assessments from './assessments.json'
 import { assessTree } from './assessTree.js'
 import { speciesWikidata } from './speciesWikidata.js'
 import { convertKataster2OSM } from './convertKataster2OSM.js'
+import treeMarker from './treeMarker.json'
 
 let app
 
@@ -15,7 +16,7 @@ export class Tree {
   }
 
   show () {
-    const options = JSON.parse(JSON.stringify(app.config.treeMarker))
+    const options = JSON.parse(JSON.stringify(treeMarker))
     if (this.assessment in assessments) {
       options.color = assessments[this.assessment]
     }
