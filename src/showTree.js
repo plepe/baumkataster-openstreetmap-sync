@@ -1,6 +1,7 @@
 import distance from '@turf/distance'
 
 import { PropertiesCmp } from './PropertiesCmp'
+import { baumkatasterWien } from '../dataset/baumkataster-wien'
 
 let currentLayer
 let currentOsm
@@ -53,7 +54,7 @@ export function showTree (_app, feature, layer) {
 
   details.appendChild(document.createTextNode(feature.properties.assessment || 'not assessed (yet)'))
 
-  table = new PropertiesCmp()
+  table = new PropertiesCmp(baumkatasterWien.showFields)
   details.appendChild(table.init())
 
   table.show(feature.properties, 'kat')

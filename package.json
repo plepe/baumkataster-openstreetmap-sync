@@ -9,7 +9,7 @@
     "download-openstreetmap": "node download-openstreetmap.js",
     "download-all": "npm-run-all -p download-baumkataster",
     "assess": "node assess.js",
-    "lint": "standard --fix *.js src/*.js",
+    "lint": "standard --fix *.js src/*.js dataset/*.js",
     "prepare": "npm-run-all build",
     "start": "http-server ./ -p 8000",
     "watch": "watchify --debug src/app.js -p esmify -o dist/app.js -v"
