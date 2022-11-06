@@ -4,27 +4,28 @@ const genusFix = {
   'Eucommina': 'Eucommia',
   'Eleagnus': 'Elaeagnus'
 }
+// when array, then [ min, recommended, max ]
 const heights = {
   0: '',
-  1: '3',
-  2: '7',
-  3: '13',
-  4: '18',
-  5: '23',
-  6: '28',
-  7: '33',
-  8: '40'
+  1: ['minMax', '3', 0, 5],
+  2: ['minMax', '7', 6, 10],
+  3: ['minMax', '13', 11, 15],
+  4: ['minMax', '18', 16, 20],
+  5: ['minMax', '23', 21, 25],
+  6: ['minMax', '28', 26, 30],
+  7: ['minMax', '33', 31, 35],
+  8: ['min', '40', 36]
 }
 const diameter_crowns = {
   0: '',
-  1: '2.5',
-  2: '4',
-  3: '8',
-  4: '11',
-  5: '14',
-  6: '17',
-  7: '20',
-  8: '22'
+  1: ['minMax', '2.5', 0, 3],
+  2: ['minMax', '4', 4, 6],
+  3: ['minMax', '8', 7, 9],
+  4: ['minMax', '11', 10, 12],
+  5: ['minMax', '14', 13, 15],
+  6: ['minMax', '17', 16, 18],
+  7: ['minMax', '20', 19, 21],
+  8: ['min', '22', 22]
 }
 const genus_types = {
   "Abies": "conifer",

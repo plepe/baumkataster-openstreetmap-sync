@@ -1,6 +1,7 @@
 import distance from '@turf/distance'
 
 import { convertKataster2OSM } from './convertKataster2OSM.js'
+import { tagCmp } from './tagCmp.js'
 
 let app
 
@@ -90,9 +91,9 @@ export function assessTree (katTree, osmTrees, callback) {
       })
     }
 
-    if (osmTree.properties.circumference !== convertedTags.circumference ||
-        osmTree.properties.diameter_crown !== convertedTags.diameter_crown ||
-        osmTree.properties.height !== convertedTags.height) {
+    if (!tagCmp(osmTree.properties.circumference, convertedTags.circumference) ||
+        !tagCmp(osmTree.properties.diameter_crown, convertedTags.diameter_crown) ||
+        !tagCmp(osmTree.properties.height, convertedTags.height)) {
       return callback(null, {
         text: 'tree found, changed values',
         trees

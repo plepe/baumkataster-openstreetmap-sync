@@ -1,4 +1,5 @@
 import { convertKataster2OSM } from './convertKataster2OSM.js'
+import { tagCmp } from './tagCmp.js'
 
 let app
 const url = 'http://127.0.0.1:8111/'
@@ -12,13 +13,25 @@ function exec (param) {
   xhr.send()
 }
 
-function toAddTags (p) {
+function toAddTags (p, current) {
   return Object.keys(p)
     .map(k => {
-        const v = p[k]
+        let v = p[k]
+        if (Array.isArray(v)) {
+          if (current && tagCmp(current[k], v)) {
+            return
+          }
+          v = v[1]
+        } else {
+          if ((current && current[k] === v) || (v === '' && !(k in current))) {
+            return
+          }
+        }
+
         return encodeURIComponent(k) + '=' + encodeURIComponent(v)
       })
-      .join('%7C')
+    .filter(v => v)
+    .join('%7C')
 }
 
 function addActions ({katasterTree, osmTree}) {
@@ -41,7 +54,7 @@ function addActions ({katasterTree, osmTree}) {
         (err, tags) => {
           if (err) { return global.alert(err) }
 
-          let p = 'load_object?objects=' + id + '&addtags=' + toAddTags(tags)
+          let p = 'load_object?objects=' + id + '&addtags=' + toAddTags(tags, osmTree.properties)
           exec(p)
         }
       )
