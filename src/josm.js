@@ -23,7 +23,7 @@ function toAddTags (p, current) {
           }
           v = v[1]
         } else {
-          if ((current && current[k] === v) || (v === '' && !(k in current))) {
+          if (current && (current[k] === v || (v === '' && !(k in current)))) {
             return
           }
         }
