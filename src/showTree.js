@@ -75,7 +75,7 @@ export function showTree (_app, feature, layer, convertedTags) {
 
   const select = document.createElement('select')
   select.onchange = () => {
-    highlightOsm(feature, osmFeatures.features[select.value])
+    highlightOsm(feature, osmFeatures.features[select.value], convertedTags)
   }
   if (osmFeatures && osmFeatures.features && osmFeatures.features.length) {
     osmFeatures.features.forEach((osmFeature, i) => {
